@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>pistakio</title>
+<title>denji</title>
 <meta name="description" content="pistachio spreads for a new generation of pistachio lovers">
 <meta name="theme-color" content="#c8d97c">
 <meta name="color-scheme" content="light">
@@ -109,7 +109,7 @@
 -->
 <script>
 const GAMBAR = {
-  fotoAtas : "https://i.8upload.com/image/3738134aee947c85/1feffecc8f8847b4fcd51e29e9c62641.jpg",
+  fotoAtas : "https://i.8upload.com/image/f891922531d80797/proyek-baru-30-68370c5.png",
   logo     : "https://i.8upload.com/image/d4836d32cf164939/proyek-baru-29-2948c6c.png",
 
   link1    : "https://iili.io/Ce4o8vf.webp",
@@ -260,12 +260,60 @@ const LINK = [
    ============================================================================ */
 const SOSIAL = [
   { jenis: "instagram", url: "https://instagram.com" },
-  { jenis: "tiktok",    url: "https://tiktok.com" },
+  { jenis: "tiktok",    url: "https://www.tiktok.com/@inidenjiww?_r=1&_t=ZS-98NmL8bGBee" },
   { jenis: "pinterest", url: "https://www.pinterest.com" },
   { jenis: "linkedin",  url: "https://linkedin.com" },
   { jenis: "email",     url: "mailto:nothing@mail.lol" },
 ];
 </script>
+
+
+<script>
+/* ============================================================================
+   BAGIAN 6 — ANIMASI
+   --------------------------------------------------------------------------
+   Semua efek gerak diatur di sini. Isi dengan  true  (nyala)  atau  false (mati).
+   Mau halaman diam total? Cukup ubah   aktif : false
+
+   Semua animasi di sini ringan: hanya memakai transform & opacity (dikerjakan
+   kartu grafis, bukan prosesor), animasi berulang otomatis berhenti setelah
+   selesai, dan di HP kentang efek berat dimatikan sendiri.
+   ============================================================================ */
+const ANIMASI = {
+
+  aktif : true,                 // false = semua animasi mati sekaligus
+
+  modeHemat : "auto",           // "auto" = deteksi HP lemah/hemat data lalu
+                                //          sisakan animasi paling ringan saja
+                                // "selalu" = paksa mode ringan
+                                // "jangan" = jangan pernah aktifkan mode ringan
+
+  // ---- saat halaman pertama dibuka ----
+  masukHalaman   : true,        // foto, logo, bio, tombol muncul lembut
+  jedaAntarTombol: 80,          // ms — makin besar makin "satu per satu"
+
+  // ---- saat digulir (scroll) ----
+  munculSaatScroll : true,      // kartu muncul waktu masuk layar
+  garisProgres     : true,      // garis tipis penunjuk posisi scroll di atas
+
+  // ---- foto & logo ----
+  fotoBernapas  : true,         // foto atas zoom pelan (ken burns)
+  logoMengambang: true,         // logo naik-turun pelan
+
+  // ---- tombol / kartu ----
+  hoverTombol : true,           // tombol terangkat saat disentuh kursor
+  kilauTombol : true,           // kilatan cahaya menyapu tombol saat hover
+  efekSentuh  : true,           // riak (ripple) saat tombol diklik
+
+  // ---- pernak-pernik ----
+  ikonSosialMemantul : true,    // ikon sosial memantul bergantian
+  lencanaBerkilau    : true,    // lencana Verified berdenyut halus
+
+  // ---- kecepatan keseluruhan ----
+  kecepatan : 1,                // 1 = normal, 0.7 = lebih cepat, 1.5 = lebih santai
+};
+</script>
+
 
 
 
@@ -502,6 +550,200 @@ body{
   .panel[hidden]{display:block!important}
   .link,.pcard{box-shadow:none;break-inside:avoid}
 }
+
+/* ============================================================================
+   LAPISAN ANIMASI — dikendalikan dari BAGIAN 6 (ANIMASI)
+   Semua efek hanya jalan bila <html> punya class .anim-on
+   ============================================================================ */
+:root{
+  --anim-speed:1;
+  --t-fast:calc(.22s * var(--anim-speed));
+  --t-base:calc(.55s * var(--anim-speed));
+  --t-slow:calc(.9s  * var(--anim-speed));
+  --ease-out-soft:cubic-bezier(.16,.84,.34,1);
+  --ease-pop:cubic-bezier(.34,1.56,.64,1);
+}
+
+/* ---- garis progres scroll ---- */
+.scroll-progress{
+  position:fixed;top:0;left:0;height:3px;width:100%;z-index:600;contain:strict;will-change:transform;
+  transform:scaleX(0);transform-origin:0 50%;
+  background:linear-gradient(90deg,var(--button-style-border-color),var(--button-style-background));
+  opacity:.9;pointer-events:none;
+}
+
+/* ---- masuk halaman (entrance) ---- */
+.anim-on.fx-enter .hero{animation:heroIn calc(var(--t-slow) * 1.1) var(--ease-out-soft) both}
+@keyframes heroIn{from{opacity:0;transform:scale(1.06)}to{opacity:1;transform:none}}
+
+.anim-on .logo.pop-in,
+.anim-on .name-text.pop-in{animation:popIn calc(var(--t-base) * 1.15) var(--ease-pop) both;animation-delay:.12s}
+@keyframes popIn{from{opacity:0;transform:translateY(14px) scale(.94)}to{opacity:1;transform:none}}
+
+.anim-on .fade-up{animation:fadeUp var(--t-base) var(--ease-out-soft) both;animation-delay:var(--d,.24s)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+
+/* ---- kartu muncul saat scroll ---- */
+.anim-on .card-reveal.card-reveal{opacity:0;transform:translateY(22px) scale(.985);will-change:opacity,transform;contain:layout}
+.anim-on .card-reveal.card-reveal.is-in{
+  opacity:1;transform:none;
+  transition:opacity var(--t-base) var(--ease-out-soft),transform var(--t-base) var(--ease-out-soft);
+  transition-delay:var(--d,0ms);
+}
+.anim-on .card-reveal.card-reveal.is-in{will-change:auto}
+
+/* ---- foto bernapas (ken burns) ---- */
+.anim-on.fx-hero .hero img{
+  animation:kenBurns calc(22s * var(--anim-speed)) ease-in-out 6 alternate;
+  will-change:transform;
+}
+.anim-on.fx-hero .hero img[data-done]{animation:none;will-change:auto}
+@keyframes kenBurns{
+  0%  {transform:scale(1) translate3d(0,0,0)}
+  100%{transform:scale(1.09) translate3d(0,-1.6%,0)}
+}
+
+/* ---- logo mengambang ---- */
+.anim-on.fx-logo .logo,
+.anim-on.fx-logo .name-text{
+  animation:popIn calc(var(--t-base) * 1.15) var(--ease-pop) both,
+            floaty calc(5.5s * var(--anim-speed)) ease-in-out .8s 20;
+}
+.anim-on.fx-logo .logo[data-done],
+.anim-on.fx-logo .name-text[data-done]{animation:none}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+
+/* ---- hover tombol terangkat ---- */
+.anim-on.fx-hover .link,
+.anim-on.fx-hover .pcard,
+.anim-on.fx-hover .shop-cta{
+  transition:background var(--t-fast) var(--ease),
+             transform calc(.2s * var(--anim-speed)) var(--ease-pop),
+             box-shadow calc(.2s * var(--anim-speed)) var(--ease);
+}
+@media (hover:hover) and (pointer:fine){
+  .anim-on.fx-hover .link:hover,
+  .anim-on.fx-hover .pcard:hover,
+  .anim-on.fx-hover .shop-cta:hover{
+    transform:translate(-2px,-3px);
+    box-shadow:6px 8px 0 var(--button-style-shadow-color);
+  }
+  .anim-on.fx-hover .link:hover .thumb img,
+  .anim-on.fx-hover .pcard:hover .pimg img{transform:scale(1.07)}
+}
+.anim-on.fx-hover .thumb img,
+.anim-on.fx-hover .pimg img{transition:transform calc(.45s * var(--anim-speed)) var(--ease-out-soft)}
+.anim-on.fx-hover .link:has(.link-hit:active),
+.anim-on.fx-hover .pcard:has(.link-hit:active){transform:translate(3px,4px);box-shadow:0 0 0 var(--button-style-shadow-color)}
+
+/* ---- kilau menyapu tombol ---- */
+.anim-on.fx-shine .link,
+.anim-on.fx-shine .pcard,
+.anim-on.fx-shine .shop-cta,
+.anim-on.fx-ripple .link,
+.anim-on.fx-ripple .pcard,
+.anim-on.fx-ripple .shop-cta{overflow:hidden}
+.shop-cta{position:relative}
+.anim-on.fx-shine .link::after,
+.anim-on.fx-shine .pcard::after,
+.anim-on.fx-shine .shop-cta::after{
+  content:'';position:absolute;top:0;left:-60%;width:45%;height:100%;z-index:4;pointer-events:none;
+  background:linear-gradient(100deg,transparent,rgba(255,255,255,.65),transparent);
+  transform:skewX(-18deg);opacity:0;
+}
+@media (hover:hover) and (pointer:fine){
+  .anim-on.fx-shine .link:hover::after,
+  .anim-on.fx-shine .pcard:hover::after,
+  .anim-on.fx-shine .shop-cta:hover::after{
+    opacity:1;animation:shine calc(.85s * var(--anim-speed)) var(--ease-out-soft) forwards;
+  }
+}
+@keyframes shine{from{left:-60%}to{left:120%}}
+
+/* ---- pastikan cincin fokus tetap terlihat walau kartu di-clip ---- */
+.anim-on.fx-shine .link:has(.link-hit:focus-visible),
+.anim-on.fx-shine .pcard:has(.link-hit:focus-visible),
+.anim-on.fx-ripple .link:has(.link-hit:focus-visible),
+.anim-on.fx-ripple .pcard:has(.link-hit:focus-visible){
+  outline:3px solid var(--button-style-text);outline-offset:3px;
+}
+.anim-on.fx-shine .link .link-hit:focus-visible,
+.anim-on.fx-shine .pcard .link-hit:focus-visible,
+.anim-on.fx-ripple .link .link-hit:focus-visible,
+.anim-on.fx-ripple .pcard .link-hit:focus-visible{outline:none}
+
+/* ---- riak sentuh (ripple) ---- */
+.anim-on.fx-ripple .icon-btn,
+.anim-on.fx-ripple .tab{overflow:hidden}
+.ripple{
+  position:absolute;border-radius:50%;transform:scale(0);pointer-events:none;z-index:5;
+  background:radial-gradient(circle,rgba(0,0,0,.16),rgba(0,0,0,0) 70%);
+  animation:rippleOut calc(.62s * var(--anim-speed)) var(--ease-out-soft) forwards;
+}
+@keyframes rippleOut{to{transform:scale(2.6);opacity:0}}
+
+/* ---- ikon sosial memantul ---- */
+.anim-on.fx-social .social{animation:socialBob calc(3.4s * var(--anim-speed)) ease-in-out 12;animation-delay:var(--d,0ms)}
+.anim-on.fx-social .social[data-done]{animation:none}
+@keyframes socialBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@media (hover:hover) and (pointer:fine){
+  .anim-on.fx-social .social:hover{animation-play-state:paused;transform:scale(1.18) rotate(-6deg)}
+}
+.anim-on .social{transition:transform calc(.22s * var(--anim-speed)) var(--ease-pop)}
+
+/* ---- lencana verified berkilau ---- */
+.anim-on.fx-badge .verified .vbadge{animation:badgePulse calc(2.8s * var(--anim-speed)) ease-in-out 10}
+.anim-on.fx-badge .verified .vbadge[data-done]{animation:none}
+@keyframes badgePulse{
+  0%,100%{transform:scale(1) rotate(0)}
+  45%{transform:scale(1.16) rotate(8deg)}
+  60%{transform:scale(1.04) rotate(-4deg)}
+}
+
+/* ---- tab & tombol ikon ---- */
+.anim-on .tabs-inner::before{transition:transform calc(.36s * var(--anim-speed)) var(--ease-pop)}
+.anim-on .icon-btn{transition:transform calc(.22s * var(--anim-speed)) var(--ease-pop),background var(--t-fast) var(--ease)}
+@media (hover:hover) and (pointer:fine){
+  .anim-on .icon-btn:hover{transform:translateY(-2px) rotate(-8deg)}
+  .anim-on .kebab:hover{transform:translateY(-50%) scale(1.15)}
+  .anim-on .pcard .kebab:hover{transform:scale(1.15)}
+}
+.anim-on .kebab{transition:opacity var(--t-fast) var(--ease),transform calc(.2s * var(--anim-speed)) var(--ease-pop)}
+
+/* ---- toast lebih hidup ---- */
+.anim-on .toast{transition:opacity var(--t-fast) var(--ease),transform calc(.34s * var(--anim-speed)) var(--ease-pop)}
+
+/* ============================================================================
+   MODE HEMAT (.anim-lite) — untuk HP lemah / hemat data
+   Menyisakan efek termurah: fade + geser saja. Efek berlapis dimatikan.
+   ============================================================================ */
+.anim-lite.fx-hero .hero img,
+.anim-lite.fx-logo .logo,
+.anim-lite.fx-logo .name-text,
+.anim-lite.fx-social .social,
+.anim-lite.fx-badge .verified .vbadge{animation:none!important;will-change:auto!important}
+.anim-lite.fx-shine .link::after,
+.anim-lite.fx-shine .pcard::after,
+.anim-lite.fx-shine .shop-cta::after{display:none!important}
+.anim-lite .ripple{display:none!important}
+.anim-lite .scroll-progress{display:none!important}
+.anim-lite.fx-hover .thumb img,
+.anim-lite.fx-hover .pimg img{transition:none!important}
+@media (hover:hover) and (pointer:fine){
+  .anim-lite.fx-hover .link:hover .thumb img,
+  .anim-lite.fx-hover .pcard:hover .pimg img{transform:none!important}
+}
+.anim-lite .card-reveal.card-reveal{transform:translateY(12px)!important}
+
+/* ---- hormati pengaturan hemat gerak ---- */
+@media (prefers-reduced-motion:reduce){
+  .anim-on .card-reveal{opacity:1!important;transform:none!important}
+  .scroll-progress{display:none!important}
+}
+
+/* ---- jeda saat tab tidak aktif (hemat baterai) ---- */
+.anim-paused *,.anim-paused *::before,.anim-paused *::after{animation-play-state:paused!important}
+
 </style>
 
 <a href="#content" class="skip-link">Lewati ke konten</a>
@@ -751,5 +993,193 @@ window.addEventListener('orientationchange', setVH, {passive:true});
 })();
 </script>
 
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a213251cba783707',t:'MTc4NTA2NjE4OA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>
+/* ============================================================================
+   MESIN ANIMASI — membaca BAGIAN 6 (ANIMASI). Tidak perlu diubah.
+   ============================================================================ */
+(function(){
+'use strict';
+
+var A = (typeof ANIMASI !== 'undefined' && ANIMASI) ? ANIMASI : {};
+function on(k, def){ return A[k] === undefined ? (def !== false) : A[k] === true; }
+
+var root = document.documentElement;
+var hemat = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+var AKTIF = (A.aktif !== false) && !hemat;
+
+if (!AKTIF){
+  /* animasi mati: pastikan semua elemen terlihat normal */
+  root.classList.remove('anim-on');
+  return;
+}
+
+var spd = parseFloat(A.kecepatan);
+if (!isFinite(spd) || spd <= 0) spd = 1;
+spd = Math.min(3, Math.max(.3, spd));
+root.style.setProperty('--anim-speed', spd);
+
+/* ---------- deteksi perangkat lemah / hemat data ---------- */
+function perluModeHemat(){
+  var m = String(A.modeHemat === undefined ? 'auto' : A.modeHemat).toLowerCase();
+  if (m === 'selalu' || m === 'always' || m === 'true') return true;
+  if (m === 'jangan' || m === 'never'  || m === 'false') return false;
+
+  var n = navigator || {};
+  /* pengguna minta hemat data */
+  var c = n.connection || n.mozConnection || n.webkitConnection;
+  if (c){
+    if (c.saveData === true) return true;
+    if (/^(slow-2g|2g|3g)$/.test(String(c.effectiveType || ''))) return true;
+  }
+  /* RAM kecil (<= 4 GB) atau inti prosesor sedikit (<= 4) */
+  if (typeof n.deviceMemory === 'number' && n.deviceMemory <= 4) return true;
+  if (typeof n.hardwareConcurrency === 'number' && n.hardwareConcurrency <= 4) return true;
+  return false;
+}
+var LITE = perluModeHemat();
+
+root.classList.add('anim-on');
+if (LITE) root.classList.add('anim-lite');
+if (on('masukHalaman'))       root.classList.add('fx-enter');
+if (on('fotoBernapas'))       root.classList.add('fx-hero');
+if (on('logoMengambang'))     root.classList.add('fx-logo');
+if (on('hoverTombol'))        root.classList.add('fx-hover');
+if (on('kilauTombol') && !LITE) root.classList.add('fx-shine');
+if (on('efekSentuh'))         root.classList.add('fx-ripple');
+if (on('ikonSosialMemantul')) root.classList.add('fx-social');
+if (on('lencanaBerkilau'))    root.classList.add('fx-badge');
+
+var profile = document.querySelector('.profile');
+if (!profile) return;
+
+/* ---------- 1. garis progres scroll ---------- */
+if (on('garisProgres') && !LITE){
+  var bar = document.createElement('div');
+  bar.className = 'scroll-progress';
+  bar.setAttribute('aria-hidden','true');
+  document.body.appendChild(bar);
+  var ticking = false;
+  var update = function(){
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    var p = h > 0 ? Math.min(1, Math.max(0, window.scrollY / h)) : 0;
+    bar.style.transform = 'scaleX(' + p + ')';
+    ticking = false;
+  };
+  window.addEventListener('scroll', function(){
+    if (!ticking){ ticking = true; requestAnimationFrame(update); }
+  }, {passive:true});
+  window.addEventListener('resize', update, {passive:true});
+  update();
+}
+
+/* ---------- 2. entrance halaman ---------- */
+var step = parseInt(A.jedaAntarTombol, 10);
+if (!isFinite(step)) step = 80;
+step = Math.min(400, Math.max(0, step));
+
+if (on('masukHalaman')){
+  var logo = document.querySelector('.logo') || document.querySelector('.name-text');
+  if (logo) logo.classList.add('pop-in');
+  ['.bio', '.verified', '.tabs', '.socials'].forEach(function(sel, k){
+    var el = document.querySelector(sel);
+    if (!el) return;
+    el.classList.add('fade-up');
+    el.style.setProperty('--d', (220 + k * 70) + 'ms');
+  });
+}
+
+/* jeda memantul untuk ikon sosial */
+document.querySelectorAll('.socials .social').forEach(function(el, i){
+  el.style.setProperty('--d', (i * 140) + 'ms');
+});
+
+/* ---------- 3. muncul saat scroll ---------- */
+var cards = [].slice.call(document.querySelectorAll('.link, .pcard, .shop-cta'));
+
+if (on('munculSaatScroll') && cards.length && 'IntersectionObserver' in window){
+  cards.forEach(function(c){ c.classList.add('card-reveal'); });
+
+  var seen = 0;
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if (!en.isIntersecting) return;
+      var el = en.target;
+      var d = (seen % 6) * step;
+      el.style.setProperty('--d', d + 'ms');
+      seen++;
+      el.classList.add('is-in');
+      io.unobserve(el);
+      /* lepas kelas reveal setelah selesai supaya hover tetap responsif */
+      setTimeout(function(){
+        el.classList.remove('card-reveal','is-in');
+        el.style.removeProperty('--d');
+      }, d + 700 * spd);
+    });
+  }, { rootMargin: '0px 0px -8% 0px', threshold: .08 });
+
+  cards.forEach(function(c){ io.observe(c); });
+
+  /* jaring pengaman: kalau observer tak jalan, tampilkan semua */
+  setTimeout(function(){
+    cards.forEach(function(c){ c.classList.add('is-in'); });
+  }, 2600);
+} else {
+  cards.forEach(function(c){ c.classList.add('is-in'); });
+}
+
+/* ---------- 4. riak sentuh (ripple) ---------- */
+if (on('efekSentuh') && !LITE){
+  var targets = '.link, .pcard, .shop-cta, .icon-btn, .tab';
+  document.addEventListener('pointerdown', function(e){
+    var host = e.target.closest ? e.target.closest(targets) : null;
+    if (!host) return;
+    var cs = getComputedStyle(host);
+    if (cs.position === 'static') host.style.position = 'relative';
+    var r = host.getBoundingClientRect();
+    var size = Math.max(r.width, r.height);
+    var sp = document.createElement('span');
+    sp.className = 'ripple';
+    sp.style.width = sp.style.height = size + 'px';
+    sp.style.left = (e.clientX - r.left - size / 2) + 'px';
+    sp.style.top  = (e.clientY - r.top  - size / 2) + 'px';
+    host.appendChild(sp);
+    setTimeout(function(){ if (sp.parentNode) sp.parentNode.removeChild(sp); }, 700 * spd);
+  }, {passive:true});
+}
+
+/* ---------- 5. matikan animasi berulang setelah selesai ----------
+   Begitu putaran terakhir habis, elemen ditandai 'data-done' sehingga
+   browser berhenti melukis ulang. CPU/GPU kembali idle, baterai aman.      */
+[].slice.call(document.querySelectorAll(
+  '.hero img, .logo, .name-text, .socials .social, .verified .vbadge'
+)).forEach(function(el){
+  el.addEventListener('animationend', function(e){
+    if (e.target !== el) return;
+    if (/kenBurns|floaty|socialBob|badgePulse/.test(e.animationName)){
+      el.setAttribute('data-done','');
+      el.style.willChange = 'auto';
+    }
+  });
+});
+
+/* ---------- 6. hentikan animasi yang keluar dari layar ----------
+   Hero yang tergulir jauh ke atas tidak perlu terus dianimasikan.          */
+if ('IntersectionObserver' in window){
+  var heroImg = document.querySelector('.hero img');
+  if (heroImg){
+    new IntersectionObserver(function(en){
+      heroImg.style.animationPlayState = en[0].isIntersecting ? 'running' : 'paused';
+    }, {threshold:0}).observe(heroImg);
+  }
+}
+
+/* ---------- 7. hemat baterai: jeda animasi saat tab disembunyikan ---------- */
+document.addEventListener('visibilitychange', function(){
+  root.classList.toggle('anim-paused', document.hidden);
+});
+})();
+</script>
+
+
+</body>
 </html>
