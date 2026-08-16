@@ -529,7 +529,7 @@ img.img-fail{visibility:hidden} /* gambar gagal dimuat: disembunyikan rapi */
 
 .socials{margin-top:36px;display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:16px}
 .social{width:32px;height:32px;display:grid;place-items:center;color:var(--socialLinkFill);transition:transform .15s var(--ease);-webkit-tap-highlight-color:transparent}
-.social:hover{transform:scale(1.12)}
+.social:hover{transform:scale(1.15)}
 .social svg{width:32px;height:32px;fill:currentColor}
 
 .toast{
@@ -556,10 +556,53 @@ img.img-fail{visibility:hidden} /* gambar gagal dimuat: disembunyikan rapi */
   .hero{height:var(--container-w);border-radius:24px 24px 0 0}
   .no-hero .hero-wrap{height:84px}
   .topbar{top:28px;right:28px}
+  .socials{gap:20px}
+  .social{width:36px;height:36px}
+  .social svg{width:36px;height:36px}
+  .bio{padding-inline:calc(var(--link-gap) * 4)}
+  .panel{margin-top:36px}
 }
-/* Layar lebar: kolom sedikit lebih lega agar seimbang di monitor besar */
+/* Laptop — kolom lebih lega */
+@media (min-width:1024px){
+  :root{--container-w:660px;--pad-x:calc(var(--link-gap) * 2.5);--link-gap:16px}
+  .frame{padding-top:48px}
+  .profile{border-radius:28px 28px 0 0;min-height:calc(100dvh - 48px);box-shadow:0 28px 40px rgba(0,0,0,.18)}
+  .hero-wrap{height:calc(var(--container-w) - 90px)}
+  .hero{height:var(--container-w);border-radius:28px 28px 0 0}
+  .topbar{top:32px;right:32px}
+  .icon-btn{width:44px;height:44px}
+  .socials{gap:24px}
+  .social{width:40px;height:40px}
+  .social svg{width:40px;height:40px}
+  .panel{margin-top:40px}
+  .tabs{width:13rem}
+}
+/* Desktop — kolom lebih lega lagi */
 @media (min-width:1200px){
-  :root{--container-w:620px}
+  :root{--container-w:720px;--pad-x:calc(var(--link-gap) * 3);--link-gap:18px}
+  .frame{padding-top:56px}
+  .profile{border-radius:32px 32px 0 0;min-height:calc(100dvh - 56px);box-shadow:0 32px 48px rgba(0,0,0,.2)}
+  .hero-wrap{height:calc(var(--container-w) - 100px)}
+  .hero{height:var(--container-w);border-radius:32px 32px 0 0}
+  .topbar{top:36px;right:36px}
+  .icon-btn{width:48px;height:48px}
+  .icon-btn svg{width:22px;height:22px}
+  .bio{font-size:17px;padding-inline:calc(var(--link-gap) * 4)}
+  .socials{gap:28px}
+  .social{width:44px;height:44px}
+  .social svg{width:44px;height:44px}
+  .panel{margin-top:44px}
+  .tabs{width:14rem}
+}
+/* Layar sangat lebar (ultrawide / monitor besar) */
+@media (min-width:1600px){
+  :root{--container-w:780px;--link-gap:20px}
+  .frame{padding-top:64px}
+  .profile{border-radius:36px 36px 0 0;min-height:calc(100dvh - 64px);box-shadow:0 40px 56px rgba(0,0,0,.22)}
+  .hero-wrap{height:calc(var(--container-w) - 110px)}
+  .hero{height:var(--container-w);border-radius:36px 36px 0 0}
+  .topbar{top:40px;right:40px}
+  .tabs{width:15rem}
 }
 /* ---- HP diputar (landscape) — layar pendek + sentuhan jari ----
    Foto atas dikecilkan, konten dijauhkan dari area notch di sisi layar */
