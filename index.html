@@ -4,7 +4,54 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>denji</title>
-<meta name="description" content="denji linktree hehehehe">
+<meta name="description" content="hobi ngedit, kicaw kicaw kicaw mania">
+
+<!-- ============================================================================
+     LINK PREVIEW (Open Graph / Twitter Card)
+     ----------------------------------------------------------------------------
+     Fungsi: saat link halaman ini dikirim lewat WhatsApp, Telegram, LINE,
+     Discord, Facebook, X/Twitter, dll., akan muncul kartu pratinjau (judul +
+     deskripsi + gambar) — bukan sekadar tautan kosong.
+
+     CARA KERJA "OTOMATIS":
+     - Skrip di bawah (BAGIAN 7) menyalin judul & bio dari BAGIAN 2 dan foto
+       dari BAGIAN 1 ke tag meta ini setiap halaman dibuka, jadi semua konsisten.
+     - PENTING: mesin pratinjau (WhatsApp/Facebook/Twitter/Telegram) TIDAK
+       menjalankan JavaScript. Tag statis di bawah inilah yang mereka baca.
+       Jadi jika isi BAGIAN 1 / BAGIAN 2 diubah dan kamu mau pratinjau ikut
+       berubah, ubah juga 3 tag berlabel "EDIT" di bawah ini.
+
+     GAMBAR PRATINJAU:
+     - Wajib alamat internet lengkap (https://...) — file lokal / base64 tidak
+       akan tampil.
+     - Ukuran terbaik 1200x630 px. Ada file og-image.png siap pakai di folder
+       yang sama (unggah dulu ke freeimage.host lalu tempel linknya).
+     - Setelah mengganti gambar/judul, minta platform menyegarkan cache:
+         * Facebook : https://developers.facebook.com/tools/debug/
+         * X/Twitter: https://cards-dev.twitter.com/validator
+         * WhatsApp : kirim ulang link-nya (atau tambah ?v=2 di belakang URL)
+         * Telegram : kirim ulang link-nya (atau tambah ?v=2 di belakang URL)
+     ============================================================================ -->
+
+<!-- EDIT 1 — judul & deskripsi pratinjau (salin dari BAGIAN 2) -->
+<meta property="og:title" content="Denji Web">
+<meta property="og:description" content="hobi ngedit, kicaw kicaw kicaw mania">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Denji Web">
+<meta property="og:locale" content="id_ID">
+
+<!-- EDIT 2 — alamat web ini. Kosongkan agar otomatis memakai URL halaman. -->
+<meta property="og:url" content="">
+
+<!-- EDIT 3 — gambar pratinjau (harus https://, terbaik 1200x630). -->
+<meta property="og:image" content="https://i.8upload.com/image/f891922531d80797/proyek-baru-30-68370c5.png">
+<meta property="og:image:alt" content="denji">
+
+<!-- Kartu pratinjau untuk X/Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Denji Web">
+<meta name="twitter:description" content="hobi ngedit, kicaw kicaw kicaw mania">
+<meta name="twitter:image" content="https://i.8upload.com/image/f891922531d80797/proyek-baru-30-68370c5.png">
 <meta name="theme-color" content="#c8d97c">
 <meta name="color-scheme" content="light">
 <!-- Dukungan platform: iPhone (tambah ke layar utama), Android, dsb -->
@@ -1263,6 +1310,61 @@ if ('IntersectionObserver' in window){
 document.addEventListener('visibilitychange', function(){
   root.classList.toggle('anim-paused', document.hidden);
 });
+})();
+</script>
+
+
+<script>
+/* ============================================================================
+   BAGIAN 7 — SINKRONISASI LINK PREVIEW (jangan dihapus)
+   ----------------------------------------------------------------------------
+   Menyalin judul & bio (BAGIAN 2) dan foto (BAGIAN 1) ke tag meta pratinjau
+   di <head>, supaya judul tab, deskripsi, dan kartu pratinjau selalu
+   konsisten dengan isi halaman setiap kali dibuka.
+
+   CATATAN: WhatsApp/Facebook/Twitter/Telegram tidak menjalankan JavaScript
+   saat "membaca" link. Tag statis berlabel "EDIT" di <head> adalah yang
+   mereka pakai. Ubah tag itu kalau isi halaman berubah.
+   ============================================================================ */
+(function(){
+  try {
+    function setMeta(attr, key, value){
+      var sel = attr === 'property'
+        ? 'meta[property="' + key + '"]'
+        : 'meta[name="' + key + '"]';
+      var el = document.querySelector(sel);
+      if (!el){
+        el = document.createElement('meta');
+        el.setAttribute(attr, key);
+        document.head.appendChild(el);
+      }
+      if (value) el.setAttribute('content', value);
+    }
+
+    var P = (typeof PENGATURAN !== 'undefined') ? PENGATURAN : {};
+    var G = (typeof GAMBAR !== 'undefined') ? GAMBAR : {};
+
+    var judul = P.judulHalaman || P.namaTeks || 'Denji Web';
+    var bio   = P.bio || '';
+    var foto  = G.fotoAtas || G.logo || '';
+
+    // meta "description" klasik (dipakai mesin pencari)
+    setMeta('name', 'description', bio);
+
+    // Open Graph
+    setMeta('property', 'og:title', judul);
+    setMeta('property', 'og:description', bio);
+    setMeta('property', 'og:site_name', judul);
+    setMeta('property', 'og:url', location.href);
+    if (foto) setMeta('property', 'og:image', foto);
+
+    // Twitter Card
+    setMeta('name', 'twitter:title', judul);
+    setMeta('name', 'twitter:description', bio);
+    if (foto) setMeta('name', 'twitter:image', foto);
+  } catch(e){
+    // Jika ada kesalahan, tag statis di <head> tetap bekerja.
+  }
 })();
 </script>
 
