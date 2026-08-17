@@ -362,7 +362,7 @@ const ANIMASI = {
   --button-style-radius:28px;
   --link-gap:14px;
   --link-radius:32px;
-  --container-w:580px;
+  --container-w:clamp(320px, 90vw, 580px);
   --frame-color:#b0bf6d; /* nilai default; dihitung ulang oleh JS bila warna diganti — fallback utk browser tanpa color-mix() */
   --pad-x:var(--link-gap);
   --label-size:14px;
@@ -415,9 +415,9 @@ body{
 .icon-btn:active{transform:scale(.94)}
 .icon-btn svg{width:20px;height:20px}
 
-.hero-wrap{position:relative;width:100%;height:calc(100vw - 80px)}
+.hero-wrap{position:relative;width:100%;height:calc(var(--container-w) - 80px)}
 .hero{
-  position:absolute;top:0;left:0;right:0;height:100vw;z-index:0;overflow:hidden;background:var(--profileBackground);
+  position:absolute;top:0;left:0;right:0;height:var(--container-w);z-index:0;overflow:hidden;background:var(--profileBackground);
   -webkit-mask:radial-gradient(110.26% 96% at 50% 0%,#000 50%,rgba(0,0,0,.99) 54.68%,rgba(0,0,0,.97) 58.79%,rgba(0,0,0,.94) 62.4%,rgba(0,0,0,.90) 65.61%,rgba(0,0,0,.85) 68.52%,rgba(0,0,0,.79) 71.2%,rgba(0,0,0,.72) 73.75%,rgba(0,0,0,.65) 76.25%,rgba(0,0,0,.57) 78.8%,rgba(0,0,0,.48) 81.48%,rgba(0,0,0,.39) 84.39%,rgba(0,0,0,.30) 87.6%,rgba(0,0,0,.20) 91.21%,rgba(0,0,0,.10) 95.32%,rgba(0,0,0,0) 100%);
           mask:radial-gradient(110.26% 96% at 50% 0%,#000 50%,rgba(0,0,0,.99) 54.68%,rgba(0,0,0,.97) 58.79%,rgba(0,0,0,.94) 62.4%,rgba(0,0,0,.90) 65.61%,rgba(0,0,0,.85) 68.52%,rgba(0,0,0,.79) 71.2%,rgba(0,0,0,.72) 73.75%,rgba(0,0,0,.65) 76.25%,rgba(0,0,0,.57) 78.8%,rgba(0,0,0,.48) 81.48%,rgba(0,0,0,.39) 84.39%,rgba(0,0,0,.30) 87.6%,rgba(0,0,0,.20) 91.21%,rgba(0,0,0,.10) 95.32%,rgba(0,0,0,0) 100%);
 }
@@ -547,10 +547,11 @@ img.img-fail{visibility:hidden} /* gambar gagal dimuat: disembunyikan rapi */
 .oops code{background:#f1fcbd;padding:2px 6px;border-radius:6px;font-size:13px}
 .oops ul{margin:10px 0 0 18px}
 
+/* Tablet */
 @media (min-width:640px){
   html{background:var(--frame-color)}
   :root{--pad-x:calc(var(--link-gap) * 2);--label-size:16px}
-  .frame{padding-top:40px}
+  .frame{padding-top:clamp(24px, 3vw, 40px)}
   .profile{border-radius:24px 24px 0 0;min-height:calc(100dvh - 40px);box-shadow:0 24px 32px rgba(0,0,0,.15)}
   .hero-wrap{height:calc(var(--container-w) - 80px)}
   .hero{height:var(--container-w);border-radius:24px 24px 0 0}
@@ -562,47 +563,30 @@ img.img-fail{visibility:hidden} /* gambar gagal dimuat: disembunyikan rapi */
   .bio{padding-inline:calc(var(--link-gap) * 4)}
   .panel{margin-top:36px}
 }
-/* Laptop — kolom lebih lega */
+/* Laptop */
 @media (min-width:1024px){
-  :root{--container-w:660px;--pad-x:calc(var(--link-gap) * 2.5);--link-gap:16px}
-  .frame{padding-top:48px}
-  .profile{border-radius:28px 28px 0 0;min-height:calc(100dvh - 48px);box-shadow:0 28px 40px rgba(0,0,0,.18)}
+  :root{--container-w:clamp(600px, 55vw, 740px);--pad-x:clamp(28px, 2.5vw, 48px);--link-gap:clamp(14px, 1.5vw, 18px)}
+  .frame{padding-top:clamp(32px, 3.5vw, 56px)}
+  .profile{border-radius:28px 28px 0 0;min-height:calc(100dvh - 56px);box-shadow:0 28px 40px rgba(0,0,0,.18)}
   .hero-wrap{height:calc(var(--container-w) - 90px)}
   .hero{height:var(--container-w);border-radius:28px 28px 0 0}
-  .topbar{top:32px;right:32px}
-  .icon-btn{width:44px;height:44px}
-  .socials{gap:24px}
-  .social{width:40px;height:40px}
-  .social svg{width:40px;height:40px}
-  .panel{margin-top:40px}
-  .tabs{width:13rem}
+  .topbar{top:clamp(28px, 2.5vw, 36px);right:clamp(28px, 2.5vw, 36px)}
+  .icon-btn{width:clamp(40px, 3.5vw, 48px);height:clamp(40px, 3.5vw, 48px)}
+  .socials{gap:clamp(20px, 2vw, 28px)}
+  .social{width:clamp(36px, 3vw, 44px);height:clamp(36px, 3vw, 44px)}
+  .social svg{width:100%;height:100%}
+  .panel{margin-top:clamp(36px, 3vw, 48px)}
+  .tabs{width:clamp(12rem, 11vw, 14rem)}
 }
-/* Desktop — kolom lebih lega lagi */
+/* Desktop */
 @media (min-width:1200px){
-  :root{--container-w:720px;--pad-x:calc(var(--link-gap) * 3);--link-gap:18px}
-  .frame{padding-top:56px}
-  .profile{border-radius:32px 32px 0 0;min-height:calc(100dvh - 56px);box-shadow:0 32px 48px rgba(0,0,0,.2)}
-  .hero-wrap{height:calc(var(--container-w) - 100px)}
-  .hero{height:var(--container-w);border-radius:32px 32px 0 0}
-  .topbar{top:36px;right:36px}
-  .icon-btn{width:48px;height:48px}
-  .icon-btn svg{width:22px;height:22px}
-  .bio{font-size:17px;padding-inline:calc(var(--link-gap) * 4)}
-  .socials{gap:28px}
-  .social{width:44px;height:44px}
-  .social svg{width:44px;height:44px}
-  .panel{margin-top:44px}
-  .tabs{width:14rem}
+  :root{--link-gap:clamp(16px, 1.3vw, 20px)}
+  .profile{border-radius:32px 32px 0 0;box-shadow:0 32px 48px rgba(0,0,0,.2)}
+  .bio{font-size:clamp(16px, 1.3vw, 18px)}
 }
-/* Layar sangat lebar (ultrawide / monitor besar) */
+/* Ultrawide / Monitor sangat besar */
 @media (min-width:1600px){
-  :root{--container-w:780px;--link-gap:20px}
-  .frame{padding-top:64px}
-  .profile{border-radius:36px 36px 0 0;min-height:calc(100dvh - 64px);box-shadow:0 40px 56px rgba(0,0,0,.22)}
-  .hero-wrap{height:calc(var(--container-w) - 110px)}
-  .hero{height:var(--container-w);border-radius:36px 36px 0 0}
-  .topbar{top:40px;right:40px}
-  .tabs{width:15rem}
+  .profile{border-radius:36px 36px 0 0;box-shadow:0 40px 56px rgba(0,0,0,.22)}
 }
 /* ---- HP diputar (landscape) — layar pendek + sentuhan jari ----
    Foto atas dikecilkan, konten dijauhkan dari area notch di sisi layar */
