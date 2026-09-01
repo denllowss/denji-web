@@ -131,6 +131,11 @@ const PLAYER = {
   mp3   : "https://raw.githubusercontent.com/denllowss/files/refs/heads/main/Harvey%20Her%27s%20x%20Stress%20Relief%20late%20night%20drive%20home%20MASHUP.mp3",
   cover : "https://i.pinimg.com/736x/49/17/3e/49173e78441b3a35ee18d7881b875abc.jpg",
 };
+
+const LATAR = {
+  aktif : true,  // latar desktop: salinan halaman di-blur di luar kartu utama
+  blur  : 40,    // kekuatan blur (10-150, makin besar makin blur)
+};
 </script>
 
 <style>
@@ -696,8 +701,8 @@ img.img-fail{visibility:hidden}
 
 /* ===== ECHO BLUR BACKGROUND (hanya desktop) =====
    Menampilkan salinan konten halaman yang diperbesar & di-blur
-   sebagai latar di luar kartu utama. Ubah angka blur di JS
-   bagian "ECHO BLUR BACKGROUND" (targetBlur = 92). */
+   sebagai latar di luar kartu utama.
+   Pengaturan: bagian "EDIT DI SINI" di atas -> const LATAR. */
 .bg-echo{display:none}
 @media (min-width:640px){
   .bg-echo{
@@ -1751,15 +1756,19 @@ document.addEventListener('visibilitychange', function(){
 <script>
 /* ===== ECHO BLUR BACKGROUND (hanya desktop) =====
    Menyalin tampilan halaman ke lapisan latar yang diperbesar
-   lalu di-blur kuat (±90%), jadi area di luar web utama di
-   desktop tidak lagi kosong/hanya warna.
-   - targetBlur : kekuatan blur hasil akhir (px di layar). Naikkan untuk lebih blur.
-   - aktif hanya di min-width:640px, nonaktif di ponsel landscape & print. */
+   lalu di-blur, jadi area di luar web utama di desktop tidak
+   lagi kosong/hanya warna.
+   - Pengaturan : const LATAR di bagian "EDIT DI SINI" di atas.
+   - Ukuran & posisi otomatis menyesuaikan layar (resize/zoom).
+   - Aktif hanya di min-width:640px, nonaktif di ponsel landscape & print. */
 (function(){
 'use strict';
 var mq = window.matchMedia ? window.matchMedia('(min-width:640px)') : null;
 var lq = window.matchMedia ? window.matchMedia('(orientation:landscape) and (max-height:520px) and (pointer:coarse)') : null;
-var targetBlur = 92;
+
+var LB = (typeof LATAR !== 'undefined' && LATAR) ? LATAR : {};
+if (LB.aktif === false) return;
+var targetBlur = Math.min(150, Math.max(10, parseFloat(LB.blur) || 90));
 
 var app = document.getElementById('app');
 var frame = app ? app.querySelector('.frame') : null;
@@ -1825,7 +1834,7 @@ function fit(){
   } else {
     inner.style.cssText = 'position:absolute;left:50%;top:50%;transform-origin:center;transform:translate(-50%,-50%) scale(' + s.toFixed(3) + ')';
   }
-  var b = Math.min(140, Math.max(18, targetBlur / s));
+  var b = Math.min(200, Math.max(6, targetBlur / s));
   blurBox.style.filter = 'blur(' + b.toFixed(1) + 'px) saturate(1.18) brightness(1.05) contrast(.95)';
 }
 
@@ -1850,5 +1859,5 @@ build();
 })();
 </script>
 
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a346daec2e0cda92',t:'MTc4ODI5Mjc2Mw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a34704990fee155a',t:'MTc4ODI5NDQ3MA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3471bb4f8cb155a',t:'MTc4ODI5NTQxNw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a346daec2e0cda92',t:'MTc4ODI5Mjc2Mw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a34704990fee155a',t:'MTc4ODI5NDQ3MA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3471e55da3e155a',t:'MTc4ODI5NTUyNA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
