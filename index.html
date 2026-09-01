@@ -694,6 +694,35 @@ img.img-fail{visibility:hidden}
   }
 }
 
+/* ===== ECHO BLUR BACKGROUND (hanya desktop) =====
+   Menampilkan salinan konten halaman yang diperbesar & di-blur
+   sebagai latar di luar kartu utama. Ubah angka blur di JS
+   bagian "ECHO BLUR BACKGROUND" (targetBlur = 92). */
+.bg-echo{display:none}
+@media (min-width:640px){
+  .bg-echo{
+    display:block;position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;
+    background:var(--frame-color);
+  }
+  .bg-echo .echo-inner{
+    position:absolute;left:50%;top:50%;
+    transform:translate(-50%,-50%) scale(var(--echo-scale,2.4));
+    transform-origin:center center;
+    will-change:transform;
+  }
+  .bg-echo .echo-blur{
+    filter:blur(38px) saturate(1.18) brightness(1.05) contrast(.95);
+  }
+  .bg-echo .echo-src{width:var(--container-w);min-height:0;padding:0;position:static;z-index:auto}
+  .bg-echo .profile{min-height:0;border:0;box-shadow:none}
+  .bg-echo *,.bg-echo *::before,.bg-echo *::after{
+    animation:none!important;transition:none!important;box-shadow:none!important;
+  }
+  .bg-echo::after{
+    content:'';position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(130% 100% at 50% 38%, transparent 42%, rgba(30,35,16,.14) 100%);
+  }
+}
 @media (orientation:landscape) and (max-height:520px) and (pointer:coarse){
   html{background:var(--profileBackground);background-image:none}
   body::before,body::after{display:none}
@@ -1720,5 +1749,78 @@ document.addEventListener('visibilitychange', function(){
 })();
 </script>
 
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a346daec2e0cda92',t:'MTc4ODI5Mjc2Mw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a34704990fee155a',t:'MTc4ODI5NDQ3MA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>
+/* ===== ECHO BLUR BACKGROUND (hanya desktop) =====
+   Menyalin tampilan halaman ke lapisan latar yang diperbesar
+   lalu di-blur kuat (±90%), jadi area di luar web utama di
+   desktop tidak lagi kosong/hanya warna.
+   - targetBlur : kekuatan blur hasil akhir (px di layar). Naikkan untuk lebih blur.
+   - aktif hanya di min-width:640px, nonaktif di ponsel landscape & print. */
+(function(){
+'use strict';
+var mq = window.matchMedia ? window.matchMedia('(min-width:640px)') : null;
+var lq = window.matchMedia ? window.matchMedia('(orientation:landscape) and (max-height:520px) and (pointer:coarse)') : null;
+var targetBlur = 92;
+
+var app = document.getElementById('app');
+var frame = app ? app.querySelector('.frame') : null;
+if (!app || !app.parentNode || !frame) return;
+
+var shell, inner, blurBox, clone;
+
+function build(){
+  clone = frame.cloneNode(true);
+  clone.removeAttribute('id');
+  clone.classList.add('echo-src');
+  clone.querySelectorAll('[id]').forEach(function(el){ el.removeAttribute('id'); });
+  clone.querySelectorAll('audio, script, noscript, iframe, form').forEach(function(el){ el.remove(); });
+  shell = document.createElement('div');
+  shell.className = 'bg-echo';
+  shell.setAttribute('aria-hidden','true');
+  inner = document.createElement('div');
+  inner.className = 'echo-inner';
+  blurBox = document.createElement('div');
+  blurBox.className = 'echo-blur';
+  blurBox.appendChild(clone);
+  inner.appendChild(blurBox);
+  shell.appendChild(inner);
+  app.parentNode.insertBefore(shell, app);
+  fit();
+}
+
+function fit(){
+  if (!shell || !clone) return;
+  if (!mq || !mq.matches || (lq && lq.matches)){ shell.style.display = 'none'; return; }
+  shell.style.display = '';
+  var W = clone.offsetWidth || 580;
+  var H = clone.offsetHeight || 900;
+  var s = Math.max(window.innerWidth / W, window.innerHeight / H, 1.35) * 1.12;
+  s = Math.min(s, 8);
+  inner.style.setProperty('--echo-scale', s.toFixed(3));
+  var b = Math.min(140, Math.max(18, targetBlur / s));
+  blurBox.style.filter = 'blur(' + b.toFixed(1) + 'px) saturate(1.18) brightness(1.05) contrast(.95)';
+}
+
+var rt;
+function queueFit(){ clearTimeout(rt); rt = setTimeout(fit, 180); }
+
+window.addEventListener('resize', queueFit, {passive:true});
+window.addEventListener('orientationchange', queueFit, {passive:true});
+window.addEventListener('load', queueFit);
+
+if ('MutationObserver' in window){
+  var profile = document.querySelector('.profile');
+  if (profile){
+    new MutationObserver(queueFit).observe(profile, {
+      childList:true, subtree:true, attributes:true, attributeFilter:['hidden','class']
+    });
+  }
+}
+if (mq && mq.addEventListener) mq.addEventListener('change', fit);
+
+build();
+})();
+</script>
+
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a346daec2e0cda92',t:'MTc4ODI5Mjc2Mw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a34704990fee155a',t:'MTc4ODI5NDQ3MA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a347179c6b50155a',t:'MTc4ODI5NTI0OQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
