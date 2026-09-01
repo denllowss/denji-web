@@ -704,16 +704,15 @@ img.img-fail{visibility:hidden}
     display:block;position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;
     background:var(--frame-color);
   }
-  .bg-echo .echo-inner{
-    position:absolute;left:50%;top:50%;
-    transform:translate(-50%,-50%) scale(var(--echo-scale,2.4));
-    transform-origin:center center;
-    will-change:transform;
-  }
+  .bg-echo .echo-inner{position:absolute;will-change:transform}
   .bg-echo .echo-blur{
     filter:blur(38px) saturate(1.18) brightness(1.05) contrast(.95);
+    display:flex;align-items:flex-start;
   }
-  .bg-echo .echo-src{width:var(--container-w);min-height:0;padding:0;position:static;z-index:auto}
+  .bg-echo .echo-src{
+    flex:none;width:var(--container-w);min-height:0;padding:0;position:static;z-index:auto;
+    background:var(--profileBackground);
+  }
   .bg-echo .profile{min-height:0;border:0;box-shadow:none}
   .bg-echo *,.bg-echo *::before,.bg-echo *::after{
     animation:none!important;transition:none!important;box-shadow:none!important;
@@ -1788,15 +1787,44 @@ function build(){
   fit();
 }
 
+function setTiles(n){
+  var cur = blurBox.children.length;
+  if (n === cur) return;
+  if (n < cur){
+    while (blurBox.children.length > n) blurBox.removeChild(blurBox.lastChild);
+  } else {
+    var tpl = blurBox.children[0];
+    while (blurBox.children.length < n) blurBox.appendChild(tpl.cloneNode(true));
+  }
+}
+
 function fit(){
   if (!shell || !clone) return;
   if (!mq || !mq.matches || (lq && lq.matches)){ shell.style.display = 'none'; return; }
   shell.style.display = '';
   var W = clone.offsetWidth || 580;
   var H = clone.offsetHeight || 900;
-  var s = Math.max(window.innerWidth / W, window.innerHeight / H, 1.35) * 1.12;
-  s = Math.min(s, 8);
-  inner.style.setProperty('--echo-scale', s.toFixed(3));
+  var vw = window.innerWidth, vh = window.innerHeight;
+  var s, tiles = 1, topAlign = true;
+
+  if (H >= vh){
+    // Konten lebih tinggi dari layar: perbesar sampai layar tertutup dan
+    // rataan ATAS, supaya foto di atas ikut terlihat di bagian atas layar.
+    s = Math.max(vw / W, vh / H) * 1.05;
+    s = Math.min(s, 8);
+  } else {
+    // Konten lebih pendek dari layar: muatkan tinggi layar lalu ulangi
+    // ke samping sampai layar tertutup (sambungan tertutupi blur).
+    s = Math.min((vh / H) * 1.05, 6);
+    tiles = Math.max(1, Math.ceil(vw / Math.max(1, W * s)) + 1);
+    topAlign = false;
+  }
+  setTiles(tiles);
+  if (topAlign){
+    inner.style.cssText = 'position:absolute;left:50%;top:0;transform-origin:top center;transform:translateX(-50%) scale(' + s.toFixed(3) + ')';
+  } else {
+    inner.style.cssText = 'position:absolute;left:50%;top:50%;transform-origin:center;transform:translate(-50%,-50%) scale(' + s.toFixed(3) + ')';
+  }
   var b = Math.min(140, Math.max(18, targetBlur / s));
   blurBox.style.filter = 'blur(' + b.toFixed(1) + 'px) saturate(1.18) brightness(1.05) contrast(.95)';
 }
@@ -1822,5 +1850,5 @@ build();
 })();
 </script>
 
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a346daec2e0cda92',t:'MTc4ODI5Mjc2Mw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a34704990fee155a',t:'MTc4ODI5NDQ3MA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a347179c6b50155a',t:'MTc4ODI5NTI0OQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a346daec2e0cda92',t:'MTc4ODI5Mjc2Mw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a34704990fee155a',t:'MTc4ODI5NDQ3MA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3471bb4f8cb155a',t:'MTc4ODI5NTQxNw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
