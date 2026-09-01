@@ -192,13 +192,19 @@ body{
 .topbar{position:absolute;top:calc(var(--pad-x) + var(--safe-top));right:calc(var(--pad-x) + var(--safe-right));z-index:30}
 .icon-btn{
   width:40px;height:40px;display:grid;place-items:center;border-radius:14px;cursor:pointer;color:#10130a;
-  background:rgba(226,228,222,.6);
-  background:color-mix(in srgb, rgba(255,255,255,.55), #6f7559 12%);
-  border:1px solid rgba(255,255,255,.45);
-  -webkit-backdrop-filter:blur(12px) brightness(1.35);backdrop-filter:blur(12px) brightness(1.35);
-  transition:transform .15s var(--ease),background .2s var(--ease);-webkit-tap-highlight-color:transparent;
+  background:rgba(255,255,255,.16);
+  border:1px solid rgba(255,255,255,.38);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 6px 18px rgba(16,19,10,.1);
+  -webkit-backdrop-filter:blur(18px) saturate(170%);
+  backdrop-filter:blur(18px) saturate(170%);
+  transition:transform .15s var(--ease),background .2s var(--ease),border-color .2s var(--ease),box-shadow .2s var(--ease);
+  -webkit-tap-highlight-color:transparent;
 }
-.icon-btn:hover{background:rgba(236,237,233,.75);background:color-mix(in srgb, rgba(255,255,255,.72), #6f7559 10%)}
+.icon-btn:hover{
+  background:rgba(255,255,255,.26);
+  border-color:rgba(255,255,255,.55);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.62),0 8px 22px rgba(16,19,10,.14);
+}
 .icon-btn:active{transform:scale(.94)}
 .icon-btn svg{width:20px;height:20px}
 
@@ -1327,5 +1333,5 @@ document.addEventListener('visibilitychange', function(){
 })();
 </script>
 
-</body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a346b71d69953707',t:'MTc4ODI5MTI5Ng=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
