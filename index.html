@@ -199,9 +199,9 @@ body{
 .topbar{position:absolute;top:calc(var(--pad-x) + var(--safe-top));right:calc(var(--pad-x) + var(--safe-right));z-index:30}
 .icon-btn{
   width:40px;height:40px;display:grid;place-items:center;border-radius:14px;cursor:pointer;color:#10130a;
-  background:rgba(255,255,255,.16);
-  border:1px solid rgba(255,255,255,.38);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 6px 18px rgba(16,19,10,.1);
+  background:rgba(255,255,255,.1);
+  border:1px solid rgba(255,255,255,.28);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 6px 18px rgba(16,19,10,.08);
   -webkit-backdrop-filter:blur(18px) saturate(170%);
   backdrop-filter:blur(18px) saturate(170%);
   transition:transform .15s var(--ease),background .2s var(--ease),border-color .2s var(--ease),box-shadow .2s var(--ease);
@@ -327,7 +327,7 @@ img.img-fail{visibility:hidden}
 .shop-cta:hover{background:var(--button-style-background-hover)}
 .shop-cta:active{transform:translate(3px,4px);box-shadow:0 0 0 var(--button-style-shadow-color)}
 
-.socials{margin-top:36px;display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:16px}
+.socials{margin-top:36px;display:flex;justifyntent:center;align-items:center;flex-wrap:wrap;gap:16px}
 
 .player{
   width:calc(100% - (var(--pad-x) * 2));
@@ -335,11 +335,11 @@ img.img-fail{visibility:hidden}
   padding:10px 12px;
   display:flex;align-items:center;gap:12px;
   border-radius:22px;
-  background:rgba(255,255,255,.2);
-  border:1px solid rgba(255,255,255,.42);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.58),0 12px 32px rgba(16,19,10,.12);
-  -webkit-backdrop-filter:blur(24px) saturate(180%);
-  backdrop-filter:blur(24px) saturate(180%);
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.28);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 8px 24px rgba(16,19,10,.08);
+  -webkit-backdrop-filter:blur(28px) saturate(190%);
+  backdrop-filter:blur(28px) saturate(190%);
   color:#1e2330;
 }
 .player-cover{
@@ -372,15 +372,15 @@ img.img-fail{visibility:hidden}
 .player-seek::-moz-range-track{height:4px;border-radius:99px;background:rgba(30,35,16,.18)}
 .player-play{
   width:44px;height:44px;flex:none;border-radius:50%;display:grid;place-items:center;cursor:pointer;
-  background:rgba(255,255,255,.38);
-  border:1px solid rgba(255,255,255,.55);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.75),0 4px 12px rgba(16,19,10,.1);
-  -webkit-backdrop-filter:blur(12px) saturate(160%);
-  backdrop-filter:blur(12px) saturate(160%);
+  background:rgba(255,255,255,.16);
+  border:1px solid rgba(255,255,255,.35);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 4px 12px rgba(16,19,10,.08);
+  -webkit-backdrop-filter:blur(16px) saturate(170%);
+  backdrop-filter:blur(16px) saturate(170%);
   color:#1e2330;transition:transform .15s var(--ease),background .2s var(--ease);
   touch-action:manipulation;
 }
-.player-play:hover{background:rgba(255,255,255,.5)}
+.player-play:hover{background:rgba(255,255,255,.28)}
 .player-play:active{transform:scale(.94)}
 .player-play svg{width:18px;height:18px;display:block}
 .player-play .ic-pause{display:none}
@@ -845,8 +845,7 @@ function linkCard(it){
   var chin  = cta
     ? '<div class="'+cls+'"><a class="link-hit" href="'+esc(url)+'" target="_blank" rel="noopener" style="position:absolute;top:0;right:0;bottom:0;left:0;z-index:1"><span class="sr-only">'+label+'</span></a>'+inner+'</div>'
     : '<a class="link-hit" href="'+esc(url)+'" target="_blank" rel="noopener"><div class="'+cls+'">'+inner+'</div></a>';
-  return '<div class="link">'+hd+chin+
-    '<button class="kebab" type="button" aria-label="Bagikan '+label+'" data-share="'+esc(url)+'">'+DOTS+'</button></div>';
+  return '<div class="link">'+hd+chin+'</div>';
 }
 
 function prodCard(it){
@@ -858,8 +857,7 @@ function prodCard(it){
     '<a class="link-hit" href="'+esc(url)+'" target="_blank" rel="noopener">'+
       '<div class="pimg">'+tag+(it.gambar?'<img src="'+esc(img(it.gambar))+'" alt="'+nm+'" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false">':'')+'</div>'+
       '<div class="pinfo"><div class="ptitle">'+nm+'</div>'+hrg+'</div>'+
-    '</a>'+
-    '<button class="kebab" type="button" aria-label="Bagikan '+nm+'" data-share="'+esc(url)+'">'+DOTS+'</button></div>';
+    '</a></div>';
 }
 
 var panelLinks = '<div class="panel" id="panel-links"'+(adaShop?' role="tabpanel" aria-labelledby="tab-links"':'')+'>'+
@@ -1503,6 +1501,7 @@ document.addEventListener('visibilitychange', function(){
 })();
 </script>
 
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a346d506dd1aa38e',t:'MTc4ODI5MjUyMg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a346d7bc2d81a38e',t:'MTc4ODI5MjYzMg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
 ml>
+l>
