@@ -315,10 +315,15 @@ const SHOP = {
 const SERVER = {
   aktif  : true,
   teks   : "Join Server Madeswara",
-  posisi : "atas",
+  posisi : "bawah",
   baris  : [
     { label: "IP Java & Bedrock", nilai: "madeswara.bond" },
     { label: "Port Bedrock",      nilai: "25653" },
+  ],
+  // Tombol tautan di bawah baris IP/Port di atas — buka tab baru, bukan salin.
+  tautan : [
+    { teks: "Join Grup WhatsApp", url: "https://chat.whatsapp.com/KaBA9GrlNMJEljs16TEVHY?s=cl&p=a&ilr=4&amv=0", ikon: "whatsapp" },
+    { teks: "Join Discord",       url: "https://discord.gg/7uRwQnTNMb", ikon: "discord" },
   ],
 };
 
@@ -553,7 +558,7 @@ img.img-fail{visibility:hidden} /* gambar gagal dimuat: disembunyikan rapi */
 /* ---- Tombol server + panel salin IP ---- */
 .srv{display:grid;gap:var(--link-gap)}
 .srv-btn{
-  width:100%;display:flex;align-items:center;justify-content:center;gap:8px;min-height:64px;
+  position:relative;width:100%;display:flex;align-items:center;justify-content:center;gap:8px;min-height:64px;
   padding:12px 24px;background:var(--button-style-background);color:var(--button-style-text);
   border:2px solid var(--button-style-border-color);border-radius:var(--link-radius);
   box-shadow:var(--button-style-shadow);font:inherit;font-size:var(--label-size);font-weight:600;
@@ -587,6 +592,17 @@ img.img-fail{visibility:hidden} /* gambar gagal dimuat: disembunyikan rapi */
 .srv-copy:hover{background:rgba(0,0,0,.14)}
 .srv-copy.ok{background:rgba(0,0,0,.2)}
 .srv-copy svg{width:14px;height:14px;fill:currentColor}
+.srv-join{
+  position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;gap:8px;min-height:48px;
+  padding:10px 18px;background:var(--button-style-background);color:var(--button-style-text);
+  border:2px solid var(--button-style-border-color);border-radius:var(--link-radius);
+  box-shadow:var(--button-style-shadow);font:inherit;font-size:14px;font-weight:600;
+  letter-spacing:-.2px;cursor:pointer;text-decoration:none;-webkit-tap-highlight-color:transparent;
+  transition:background .2s var(--ease),transform .12s var(--ease),box-shadow .12s var(--ease);
+}
+.srv-join:hover{background:var(--button-style-background-hover)}
+.srv-join:active{transform:translate(3px,4px);box-shadow:0 0 0 var(--button-style-shadow-color)}
+.srv-join svg{width:18px;height:18px;fill:currentColor;flex:none}
 @media (prefers-reduced-motion:reduce){.srv-panel{transition-duration:.01ms}}
 .kebab{
   position:absolute;right:12px;top:50%;transform:translateY(-50%);width:24px;height:24px;display:grid;place-items:center;
@@ -772,7 +788,9 @@ img.img-fail{visibility:hidden} /* gambar gagal dimuat: disembunyikan rapi */
 /* ---- hover tombol terangkat ---- */
 .anim-on.fx-hover .link,
 .anim-on.fx-hover .pcard,
-.anim-on.fx-hover .shop-cta{
+.anim-on.fx-hover .shop-cta,
+.anim-on.fx-hover .srv-btn,
+.anim-on.fx-hover .srv-join{
   transition:background var(--t-fast) var(--ease),
              transform calc(.2s * var(--anim-speed)) var(--ease-pop),
              box-shadow calc(.2s * var(--anim-speed)) var(--ease);
@@ -780,7 +798,9 @@ img.img-fail{visibility:hidden} /* gambar gagal dimuat: disembunyikan rapi */
 @media (hover:hover) and (pointer:fine){
   .anim-on.fx-hover .link:hover,
   .anim-on.fx-hover .pcard:hover,
-  .anim-on.fx-hover .shop-cta:hover{
+  .anim-on.fx-hover .shop-cta:hover,
+  .anim-on.fx-hover .srv-btn:hover,
+  .anim-on.fx-hover .srv-join:hover{
     transform:translate(-2px,-3px);
     box-shadow:6px 8px 0 var(--button-style-shadow-color);
   }
@@ -791,18 +811,26 @@ img.img-fail{visibility:hidden} /* gambar gagal dimuat: disembunyikan rapi */
 .anim-on.fx-hover .pimg img{transition:transform calc(.45s * var(--anim-speed)) var(--ease-out-soft)}
 .anim-on.fx-hover .link:has(.link-hit:active),
 .anim-on.fx-hover .pcard:has(.link-hit:active){transform:translate(3px,4px);box-shadow:0 0 0 var(--button-style-shadow-color)}
+.anim-on.fx-hover .srv-btn:active,
+.anim-on.fx-hover .srv-join:active{transform:translate(3px,4px);box-shadow:0 0 0 var(--button-style-shadow-color)}
 
 /* ---- kilau menyapu tombol ---- */
 .anim-on.fx-shine .link,
 .anim-on.fx-shine .pcard,
 .anim-on.fx-shine .shop-cta,
+.anim-on.fx-shine .srv-btn,
+.anim-on.fx-shine .srv-join,
 .anim-on.fx-ripple .link,
 .anim-on.fx-ripple .pcard,
-.anim-on.fx-ripple .shop-cta{overflow:hidden}
+.anim-on.fx-ripple .shop-cta,
+.anim-on.fx-ripple .srv-btn,
+.anim-on.fx-ripple .srv-join{overflow:hidden}
 .shop-cta{position:relative}
 .anim-on.fx-shine .link::after,
 .anim-on.fx-shine .pcard::after,
-.anim-on.fx-shine .shop-cta::after{
+.anim-on.fx-shine .shop-cta::after,
+.anim-on.fx-shine .srv-btn::after,
+.anim-on.fx-shine .srv-join::after{
   content:'';position:absolute;top:0;left:-60%;width:45%;height:100%;z-index:4;pointer-events:none;
   background:linear-gradient(100deg,transparent,rgba(255,255,255,.65),transparent);
   transform:skewX(-18deg);opacity:0;
@@ -810,7 +838,9 @@ img.img-fail{visibility:hidden} /* gambar gagal dimuat: disembunyikan rapi */
 @media (hover:hover) and (pointer:fine){
   .anim-on.fx-shine .link:hover::after,
   .anim-on.fx-shine .pcard:hover::after,
-  .anim-on.fx-shine .shop-cta:hover::after{
+  .anim-on.fx-shine .shop-cta:hover::after,
+  .anim-on.fx-shine .srv-btn:hover::after,
+  .anim-on.fx-shine .srv-join:hover::after{
     opacity:1;animation:shine calc(.85s * var(--anim-speed)) var(--ease-out-soft) forwards;
   }
 }
@@ -920,7 +950,8 @@ var ICON = {
   facebook:'<path d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.79-4.69 4.53-4.69 1.31 0 2.68.24 2.68.24v2.97h-1.51c-1.49 0-1.96.93-1.96 1.89v2.25h3.33l-.53 3.49h-2.8V24C19.61 23.1 24 18.1 24 12.07Z"/>',
   x:'<path d="M18.9 1.15h3.68l-8.04 9.19L24 22.85h-7.4l-5.8-7.58-6.64 7.58H.48l8.6-9.83L0 1.15h7.59l5.24 6.93 6.07-6.93Zm-1.29 19.5h2.04L6.49 3.24H4.3l13.31 17.41Z"/>',
   whatsapp:'<path d="M17.47 14.38c-.3-.15-1.75-.86-2.02-.96-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.64.07-.3-.15-1.25-.46-2.38-1.47-.88-.78-1.47-1.75-1.65-2.05-.17-.3-.02-.46.13-.6.13-.14.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.6-.92-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.48 0 1.46 1.07 2.88 1.22 3.08.15.2 2.1 3.2 5.08 4.49.71.3 1.26.49 1.69.63.71.22 1.36.19 1.87.12.57-.09 1.75-.72 2-1.41.25-.7.25-1.29.17-1.41-.07-.13-.27-.2-.57-.35ZM12.04 21.8h-.01a9.8 9.8 0 0 1-4.99-1.37l-.36-.21-3.71.97.99-3.62-.23-.37a9.79 9.79 0 1 1 8.31 4.6ZM20.5 3.49A11.78 11.78 0 0 0 2.05 17.72L.37 23.86l6.28-1.65a11.78 11.78 0 0 0 17.3-10.4c0-3.15-1.23-6.11-3.45-8.32Z"/>',
-  website:'<path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm6.93 6h-2.95a15.65 15.65 0 0 0-1.38-3.56A8.03 8.03 0 0 1 18.93 8ZM12 4.04c.83 1.2 1.48 2.53 1.91 3.96h-3.82c.43-1.43 1.08-2.76 1.91-3.96ZM4.26 14a7.96 7.96 0 0 1 0-4h3.38a16.6 16.6 0 0 0 0 4H4.26Zm.81 2h2.95c.3 1.26.77 2.46 1.38 3.56A7.99 7.99 0 0 1 5.07 16Zm2.95-8H5.07a7.99 7.99 0 0 1 4.33-3.56A15.65 15.65 0 0 0 8.02 8ZM12 19.96A13.6 13.6 0 0 1 10.09 16h3.82A13.6 13.6 0 0 1 12 19.96ZM14.34 14H9.66a14.9 14.9 0 0 1 0-4h4.68a14.9 14.9 0 0 1 0 4Zm.26 5.56c.61-1.1 1.08-2.3 1.38-3.56h2.95a7.99 7.99 0 0 1-4.33 3.56ZM16.36 14a16.6 16.6 0 0 0 0-4h3.38a7.96 7.96 0 0 1 0 4h-3.38Z"/>'
+  website:'<path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm6.93 6h-2.95a15.65 15.65 0 0 0-1.38-3.56A8.03 8.03 0 0 1 18.93 8ZM12 4.04c.83 1.2 1.48 2.53 1.91 3.96h-3.82c.43-1.43 1.08-2.76 1.91-3.96ZM4.26 14a7.96 7.96 0 0 1 0-4h3.38a16.6 16.6 0 0 0 0 4H4.26Zm.81 2h2.95c.3 1.26.77 2.46 1.38 3.56A7.99 7.99 0 0 1 5.07 16Zm2.95-8H5.07a7.99 7.99 0 0 1 4.33-3.56A15.65 15.65 0 0 0 8.02 8ZM12 19.96A13.6 13.6 0 0 1 10.09 16h3.82A13.6 13.6 0 0 1 12 19.96ZM14.34 14H9.66a14.9 14.9 0 0 1 0-4h4.68a14.9 14.9 0 0 1 0 4Zm.26 5.56c.61-1.1 1.08-2.3 1.38-3.56h2.95a7.99 7.99 0 0 1-4.33 3.56ZM16.36 14a16.6 16.6 0 0 0 0-4h3.38a7.96 7.96 0 0 1 0 4h-3.38Z"/>',
+  discord:'<path d="M20.317 4.37a19.79 19.79 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.865-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.028C.533 9.046-.319 13.58.099 18.058a.082.082 0 0 0 .031.056 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128c.126-.094.252-.192.372-.291a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.009c.12.099.246.198.373.292a.077.077 0 0 1-.006.127 12.3 12.3 0 0 1-1.873.892.076.076 0 0 0-.04.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.84 19.84 0 0 0 6.002-3.03.077.077 0 0 0 .032-.055c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.029ZM8.02 15.33c-1.183 0-2.157-1.086-2.157-2.42 0-1.333.955-2.419 2.157-2.419 1.211 0 2.176 1.095 2.157 2.42 0 1.333-.956 2.419-2.157 2.419Zm7.975 0c-1.183 0-2.157-1.086-2.157-2.42 0-1.333.955-2.419 2.157-2.419 1.211 0 2.176 1.095 2.157 2.42 0 1.333-.946 2.419-2.157 2.419Z"/>'
 };
 var DOTS = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="12" cy="5" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="12" cy="19" r="1.6"/></svg>';
 
@@ -1068,12 +1099,17 @@ if (SRV && SRV.aktif !== false && Array.isArray(SRV.baris) && SRV.baris.length){
       '<button class="srv-copy" type="button" data-copy="'+esc(b.nilai)+'" aria-label="Salin '+esc(b.label||b.nilai)+'">'+
         ICON_COPY+'<span>Salin</span></button></div>';
   }).join('');
+  var join = (Array.isArray(SRV.tautan) ? SRV.tautan : []).map(function(t){
+    if (!t || !t.url || !t.teks) return '';
+    return '<a class="srv-join" href="'+esc(safeUrl(t.url))+'" target="_blank" rel="noopener">'+
+      icon(t.ikon)+'<span>'+esc(t.teks)+'</span></a>';
+  }).join('');
   serverBlok = '<div class="srv" id="srv">'+
     '<button class="srv-btn" id="srvBtn" type="button" aria-expanded="false" aria-controls="srvPanel">'+
       '<span>'+esc(SRV.teks || 'Join Server Madeswara')+'</span>'+
       '<svg class="srv-caret" viewBox="0 0 256 256" aria-hidden="true"><path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"/></svg>'+
     '</button>'+
-    '<div class="srv-panel" id="srvPanel"><div class="srv-inner"><div class="srv-list">'+rows+'</div></div></div>'+
+    '<div class="srv-panel" id="srvPanel"><div class="srv-inner"><div class="srv-list">'+rows+join+'</div></div></div>'+
   '</div>';
 }
 var srvAtas  = (SRV && SRV.posisi === 'bawah') ? '' : serverBlok;
