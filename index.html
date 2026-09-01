@@ -304,6 +304,24 @@ const SHOP = {
      tombol   : teks tombol kecil di dalam kartu     (boleh dihapus)
      embed    : true = kartu jadi tinggi             (boleh dihapus)
    ============================================================================ */
+/* ----------------------------------------------------------------------------
+   TOMBOL SERVER (Madeswara Network)
+   ----------------------------------------------------------------------------
+   aktif  : true = tombol tampil, false = disembunyikan
+   teks   : tulisan pada tombol
+   posisi : "atas" = di atas daftar link, "bawah" = di bawah daftar link
+   baris  : daftar hal yang bisa disalin (label + nilai). Tambah/hapus bebas.
+   -------------------------------------------------------------------------- */
+const SERVER = {
+  aktif  : true,
+  teks   : "Join Server Madeswara",
+  posisi : "atas",
+  baris  : [
+    { label: "IP Java & Bedrock", nilai: "madeswara.bond" },
+    { label: "Port Bedrock",      nilai: "25653" },
+  ],
+};
+
 const LINK = [
 
   {
@@ -531,6 +549,45 @@ img.img-fail{visibility:hidden} /* gambar gagal dimuat: disembunyikan rapi */
   transition:background .2s var(--ease);position:relative;z-index:2;
 }
 .cta:hover{background:rgba(0,0,0,.14)}
+
+/* ---- Tombol server + panel salin IP ---- */
+.srv{display:grid;gap:var(--link-gap)}
+.srv-btn{
+  width:100%;display:flex;align-items:center;justify-content:center;gap:8px;min-height:64px;
+  padding:12px 24px;background:var(--button-style-background);color:var(--button-style-text);
+  border:2px solid var(--button-style-border-color);border-radius:var(--link-radius);
+  box-shadow:var(--button-style-shadow);font:inherit;font-size:var(--label-size);font-weight:600;
+  letter-spacing:-.2px;cursor:pointer;-webkit-tap-highlight-color:transparent;
+  transition:background .2s var(--ease),transform .12s var(--ease),box-shadow .12s var(--ease);
+}
+.srv-btn:hover{background:var(--button-style-background-hover)}
+.srv-btn:active{transform:translate(3px,4px);box-shadow:0 0 0 var(--button-style-shadow-color)}
+.srv-btn .srv-caret{width:16px;height:16px;flex:none;fill:currentColor;transition:transform .35s var(--ease)}
+.srv-btn[aria-expanded="true"] .srv-caret{transform:rotate(180deg)}
+/* animasi buka/tutup halus — tombol di bawahnya ikut bergeser pelan */
+.srv-panel{
+  display:grid;grid-template-rows:0fr;opacity:0;
+  transition:grid-template-rows .38s var(--ease),opacity .28s var(--ease),margin-top .38s var(--ease);
+  margin-top:calc(var(--link-gap) * -1);
+}
+.srv-panel > .srv-inner{overflow:hidden;min-height:0}
+.srv.open .srv-panel{grid-template-rows:1fr;opacity:1;margin-top:0}
+.srv-list{display:grid;gap:10px;padding:14px;background:var(--button-style-background);
+  border:2px dashed var(--button-style-border-color);border-radius:var(--link-radius);
+  color:var(--button-style-text)}
+.srv-row{display:flex;align-items:center;gap:10px}
+.srv-info{flex:1;min-width:0;text-align:left}
+.srv-lab{font-size:11px;line-height:14px;opacity:.6}
+.srv-val{font-size:14px;font-weight:600;line-height:20px;word-break:break-all}
+.srv-copy{
+  flex:none;display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 14px;border:0;
+  border-radius:64px;background:rgba(0,0,0,.08);color:inherit;font:inherit;font-size:13px;font-weight:600;
+  cursor:pointer;transition:background .2s var(--ease)
+}
+.srv-copy:hover{background:rgba(0,0,0,.14)}
+.srv-copy.ok{background:rgba(0,0,0,.2)}
+.srv-copy svg{width:14px;height:14px;fill:currentColor}
+@media (prefers-reduced-motion:reduce){.srv-panel{transition-duration:.01ms}}
 .kebab{
   position:absolute;right:12px;top:50%;transform:translateY(-50%);width:24px;height:24px;display:grid;place-items:center;
   border-radius:64px;color:var(--button-style-text);opacity:.5;cursor:pointer;z-index:3;
@@ -997,8 +1054,33 @@ function prodCard(it){
     '<button class="kebab" type="button" aria-label="Bagikan '+nm+'" data-share="'+esc(url)+'">'+DOTS+'</button></div>';
 }
 
+/* ---- tombol server + panel salin IP ---- */
+var SRV = (typeof SERVER !== 'undefined' && SERVER) ? SERVER : null;
+var serverBlok = '';
+if (SRV && SRV.aktif !== false && Array.isArray(SRV.baris) && SRV.baris.length){
+  var ICON_COPY = '<svg viewBox="0 0 256 256" aria-hidden="true"><path d="M216,32H88a8,8,0,0,0-8,8V80H40a8,8,0,0,0-8,8V216a8,8,0,0,0,8,8H168a8,8,0,0,0,8-8V176h40a8,8,0,0,0,8-8V40A8,8,0,0,0,216,32ZM160,208H48V96H160Zm48-48H176V88a8,8,0,0,0-8-8H96V48H208Z"/></svg>';
+  var ICON_OK   = '<svg viewBox="0 0 256 256" aria-hidden="true"><path d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56A8,8,0,0,1,45.66,138.34L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z"/></svg>';
+  var rows = SRV.baris.map(function(b){
+    if (!b || !b.nilai) return '';
+    return '<div class="srv-row">'+
+      '<div class="srv-info"><div class="srv-lab">'+esc(b.label||'')+'</div>'+
+      '<div class="srv-val">'+esc(b.nilai)+'</div></div>'+
+      '<button class="srv-copy" type="button" data-copy="'+esc(b.nilai)+'" aria-label="Salin '+esc(b.label||b.nilai)+'">'+
+        ICON_COPY+'<span>Salin</span></button></div>';
+  }).join('');
+  serverBlok = '<div class="srv" id="srv">'+
+    '<button class="srv-btn" id="srvBtn" type="button" aria-expanded="false" aria-controls="srvPanel">'+
+      '<span>'+esc(SRV.teks || 'Join Server Madeswara')+'</span>'+
+      '<svg class="srv-caret" viewBox="0 0 256 256" aria-hidden="true"><path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"/></svg>'+
+    '</button>'+
+    '<div class="srv-panel" id="srvPanel"><div class="srv-inner"><div class="srv-list">'+rows+'</div></div></div>'+
+  '</div>';
+}
+var srvAtas  = (SRV && SRV.posisi === 'bawah') ? '' : serverBlok;
+var srvBawah = (SRV && SRV.posisi === 'bawah') ? serverBlok : '';
+
 var panelLinks = '<div class="panel" id="panel-links"'+(adaShop?' role="tabpanel" aria-labelledby="tab-links"':'')+'>'+
-  '<div class="links">'+L.map(linkCard).join('')+'</div></div>';
+  '<div class="links">'+srvAtas+L.map(linkCard).join('')+srvBawah+'</div></div>';
 
 var panelShop = '';
 if (adaShop){
@@ -1055,6 +1137,52 @@ document.querySelectorAll('img').forEach(function(im){
   if (im.complete && im.naturalWidth === 0) fail();
   im.addEventListener('error', fail);
 });
+
+/* ---- tombol server: buka/tutup + salin ---- */
+(function(){
+  var box = document.getElementById('srv');
+  if (!box) return;
+  var btn = document.getElementById('srvBtn');
+  var pan = document.getElementById('srvPanel');
+  btn.addEventListener('click', function(){
+    var open = box.classList.toggle('open');
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (open){
+      setTimeout(function(){
+        var r = pan.getBoundingClientRect();
+        if (r.bottom > innerHeight - 12) pan.scrollIntoView({behavior:'smooth', block:'nearest'});
+      }, 400);
+    }
+  });
+  function salin(teks){
+    if (navigator.clipboard && navigator.clipboard.writeText) return navigator.clipboard.writeText(teks);
+    return new Promise(function(res, rej){
+      try{
+        var t = document.createElement('textarea');
+        t.value = teks; t.setAttribute('readonly','');
+        t.style.cssText = 'position:fixed;top:0;left:0;opacity:0';
+        document.body.appendChild(t); t.select(); t.setSelectionRange(0, teks.length);
+        var ok = document.execCommand('copy');
+        document.body.removeChild(t);
+        ok ? res() : rej();
+      }catch(e){ rej(e); }
+    });
+  }
+  box.querySelectorAll('.srv-copy').forEach(function(b){
+    var awal = b.innerHTML;
+    b.addEventListener('click', function(){
+      salin(b.getAttribute('data-copy')).then(function(){
+        b.classList.add('ok');
+        b.innerHTML = '<svg viewBox="0 0 256 256" aria-hidden="true"><path d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56A8,8,0,0,1,45.66,138.34L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z"/></svg><span>Tersalin</span>';
+        clearTimeout(b._t);
+        b._t = setTimeout(function(){ b.classList.remove('ok'); b.innerHTML = awal; }, 1600);
+      }).catch(function(){
+        b.innerHTML = '<span>Gagal</span>';
+        setTimeout(function(){ b.innerHTML = awal; }, 1600);
+      });
+    });
+  });
+})();
 
 /* ---- tab ---- */
 var tabsRoot = document.getElementById('tabs');
