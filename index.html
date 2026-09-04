@@ -45,6 +45,17 @@
 <body>
 
 <script>
+/* ===== REDIRECT CEK PATH ===== */
+(function(){
+  var path = location.pathname.replace(/\/+$/, '') || '/';
+  if (path === '/ch' || path === '/channel') {
+    location.replace('https://whatsapp.com/channel/0029VbDkWIoAjPXJzNPohv2Q');
+  }
+})();
+/* =============================== */
+</script>
+
+<script>
 /* ========== EDIT DI SINI ========== */
 /* Panel visual: buka halaman dengan ?edit  (contoh: index.html?edit) */
 
