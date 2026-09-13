@@ -1014,6 +1014,97 @@ img.img-fail{visibility:hidden}
   .hero-wrap{min-height:800px}
 }
 
+
+/* Mobile audio player: dua baris agar metadata, kontrol, dan tombol tidak bertabrakan. */
+@media (max-width:639px){
+  .player{
+    width:calc(100% - (var(--pad-x) * 2));
+    min-height:104px;
+    height:auto;
+    margin-top:30px;
+    padding:10px 12px 9px;
+    grid-template-columns:minmax(0,1fr) auto;
+    grid-template-areas:
+      "lcd controls"
+      "actions actions";
+    gap:5px 10px;
+    border-radius:24px;
+  }
+  .player-lcd{
+    grid-area:lcd;
+    width:100%;
+    height:56px;
+    padding-top:3px;
+  }
+  .player-controls{
+    grid-area:controls;
+    gap:2px;
+    padding-inline:0;
+    align-self:center;
+  }
+  .player-controls button{
+    width:28px;
+    height:30px;
+  }
+  .player-controls .m-play{
+    width:32px;
+    height:32px;
+  }
+  .player-controls .prev svg,
+  .player-controls .is-off svg{
+    width:23px;
+    height:21px;
+  }
+  .player-controls .m-play svg{
+    width:22px;
+    height:24px;
+  }
+  .player-actions{
+    grid-area:actions;
+    width:100%;
+    justify-self:stretch;
+    justify-content:flex-end;
+    gap:4px;
+    min-height:30px;
+    padding-top:5px;
+    border-top:1px solid rgba(0,0,0,.07);
+  }
+  .player-actions .act{
+    width:30px;
+    height:30px;
+  }
+  .player-actions #playerAir{display:none}
+  .player-actions #playerLoopButton{display:grid}
+  .player-name,.player-sub{font-size:11px}
+  .player-progress:hover .player-times,
+  .player-progress:focus-within .player-times{height:0;opacity:0;margin-bottom:0}
+  .player-seek{height:9px}
+  .vol-pop{
+    top:auto;
+    bottom:calc(100% + 8px);
+    inset-inline-end:-6px;
+    translate:0 0;
+    transform:scale(.88) translateY(4px);
+    transform-origin:bottom right;
+  }
+  .vol:hover .vol-pop,
+  .vol:focus-within .vol-pop,
+  .vol.show .vol-pop{
+    transform:scale(1) translateY(0);
+  }
+}
+
+@media (max-width:360px){
+  .player{
+    padding-inline:9px;
+    gap:4px 6px;
+  }
+  .player-controls{gap:0}
+  .player-controls button{width:26px}
+  .player-controls .m-play{width:30px}
+  .player-actions{gap:2px}
+}
+
 </style>
 
 <a href="#content" class="skip-link">Lewati ke konten</a>
@@ -1972,5 +2063,5 @@ build();
   document.body.classList.add('custom-cursor-enabled');
 })();
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3a383a2bc92155a',t:'MTc4OTI2NDM2Mw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3a3850759f4155a',t:'MTc4OTI2NDQyMQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
