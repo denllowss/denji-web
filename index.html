@@ -891,86 +891,18 @@ img.img-fail{visibility:hidden}
 }
 
 
-/* Cozy custom cursor — hanya aktif pada desktop dengan pointer presisi. */
-#cozyCursor{
-  display:none;
-  position:fixed;
-  top:0;
-  left:0;
-  z-index:1000;
-  width:44px;
-  height:44px;
-  pointer-events:none;
-  opacity:0;
-  transform:translate3d(-100px,-100px,0);
-  transition:opacity .22s ease,transform .14s var(--ease-out-soft);
-  will-change:transform,opacity;
-}
-#cozyCursor::before{
-  content:'';
-  position:absolute;
-  inset:-8px;
-  border-radius:50%;
-  background:radial-gradient(circle,rgba(241,252,189,.5),rgba(241,252,189,0) 68%);
-  opacity:.7;
-  filter:blur(2px);
-  animation:cursorBreathe 4.5s ease-in-out infinite;
-}
-@keyframes cursorBreathe{
-  0%,100%{transform:scale(.88);opacity:.42}
-  50%{transform:scale(1.08);opacity:.76}
-}
-#cozyCursor .cozy-cursor-ring{
-  position:absolute;
-  inset:3px;
-  border:1.5px solid var(--button-style-border-color);
-  border-radius:50%;
-  background:linear-gradient(135deg,rgba(241,252,189,.84),rgba(255,255,255,.28));
-  box-shadow:0 5px 18px rgba(50,60,31,.18),inset 0 0 0 1px rgba(255,255,255,.46);
-  transform:scale(.72);
-  transition:transform .34s var(--ease-out-soft),background .34s ease,border-color .34s ease,box-shadow .34s ease;
-  -webkit-backdrop-filter:blur(4px);
-  backdrop-filter:blur(4px);
-}
-#cozyCursor .cozy-cursor-leaf{
-  position:absolute;
-  top:50%;
-  left:50%;
-  width:15px;
-  height:15px;
-  color:#d29016;
-  fill:currentColor;
-  stroke:var(--button-style-border-color);
-  stroke-width:1.1;
-  stroke-linecap:round;
-  stroke-linejoin:round;
-  transform:translate(-50%,-50%) rotate(-18deg) scale(.78);
-  filter:drop-shadow(0 1px 1px rgba(50,60,31,.15));
-  transition:transform .34s var(--ease-pop),color .34s ease;
-}
+/* Custom cursor: bentuk panah standar, warna mengikuti tema web. */
 @media (hover:hover) and (pointer:fine) and (min-width:640px){
-  #cozyCursor{display:block}
   body.custom-cursor-enabled,
-  body.custom-cursor-enabled *{cursor:none!important}
-  #cozyCursor.is-visible{opacity:1}
-  #cozyCursor.is-hover .cozy-cursor-ring{
-    transform:scale(1);
-    border-color:var(--button-style-border-color);
-    background:linear-gradient(135deg,rgba(241,252,189,.98),rgba(255,255,255,.48));
-    box-shadow:0 6px 24px rgba(50,60,31,.22),inset 0 0 0 1px rgba(255,255,255,.62);
+  body.custom-cursor-enabled *{
+    cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='28' viewBox='0 0 24 28'%3E%3Cpath d='M3 2.2L20.8 18.7L13 19.8l4.1 8.1-3.5 1.7-4-8.1-5.2 5.8L3 2.2Z' fill='%23f1fcbd' stroke='%23323c1f' stroke-width='1.5' stroke-linejoin='round'/%3E%3C/svg%3E") 3 2, auto !important;
   }
-  #cozyCursor.is-hover .cozy-cursor-leaf{
-    transform:translate(-50%,-50%) rotate(6deg) scale(1);
-    color:#b87912;
-  }
-  #cozyCursor.is-down .cozy-cursor-ring{transform:scale(.84)}
-  #cozyCursor.is-down .cozy-cursor-leaf{transform:translate(-50%,-50%) rotate(6deg) scale(.86)}
 }
 @media (prefers-reduced-motion:reduce){
-  #cozyCursor{display:none!important}
   body.custom-cursor-enabled,
   body.custom-cursor-enabled *{cursor:auto!important}
 }
+
 
 </style>
 
@@ -1922,49 +1854,14 @@ build();
 <script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a346daec2e0cda92',t:'MTc4ODI5Mjc2Mw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a34704990fee155a',t:'MTc4ODI5NDQ3MA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3471e55da3e155a',t:'MTc4ODI5NTUyNA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
 
 <script>
-/* Custom cursor cozy untuk desktop */
+/* Custom cursor: panah standar dengan warna tema web */
 (function(){
   'use strict';
   var fine = window.matchMedia && window.matchMedia('(hover:hover) and (pointer:fine) and (min-width:640px)').matches;
   var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches;
   if (!fine || reduced || !document.body) return;
-
-  var cursor = document.createElement('div');
-  cursor.id = 'cozyCursor';
-  cursor.setAttribute('aria-hidden','true');
-  cursor.innerHTML = '<span class="cozy-cursor-ring"></span>' +
-    '<svg class="cozy-cursor-leaf" viewBox="0 0 24 24" aria-hidden="true">' +
-      '<path d="M19.3 4.7c-4.9.25-9.8 1.17-12.55 4.4-1.72 2.02-1.28 4.48.38 5.38 1.78.97 4.3.28 5.95-1.33 2.26-2.2 4.54-5.9 6.22-8.45Z"></path>' +
-      '<path d="M4.7 19.3c2.35-4.28 5.28-7.35 9.5-10.1"></path>' +
-    '</svg>';
-  document.body.appendChild(cursor);
   document.body.classList.add('custom-cursor-enabled');
-
-  var target = null;
-  function move(e){
-    cursor.style.transform = 'translate3d(' + e.clientX + 'px,' + e.clientY + 'px,0)';
-    cursor.classList.add('is-visible');
-  }
-  function over(e){
-    var next = e.target && e.target.closest
-      ? e.target.closest('a,button,[role="button"],input[type="range"],summary,label')
-      : null;
-    if (next === target) return;
-    target = next;
-    cursor.classList.toggle('is-hover', !!target);
-  }
-  function leave(){
-    cursor.classList.remove('is-visible','is-hover','is-down');
-    target = null;
-  }
-
-  document.addEventListener('mousemove', move, {passive:true});
-  document.addEventListener('mouseover', over, {passive:true});
-  document.addEventListener('pointerdown', function(){ cursor.classList.add('is-down'); }, {passive:true});
-  document.addEventListener('pointerup', function(){ cursor.classList.remove('is-down'); }, {passive:true});
-  document.addEventListener('mouseleave', leave, {passive:true});
-  window.addEventListener('blur', leave, {passive:true});
 })();
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3a36e0e9b63155a',t:'MTc4OTI2MzQ4MA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3a3725c09cd3707',t:'MTc4OTI2MzY1Ng=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
