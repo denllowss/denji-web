@@ -907,6 +907,113 @@ img.img-fail{visibility:hidden}
 }
 
 
+
+/* Desktop polish: layout split yang lebih lega dan premium. */
+@media (min-width:980px){
+  :root{--desktop-card-w:min(1080px,calc(100vw - 96px))}
+
+  .frame{
+    padding:56px 48px 88px;
+  }
+  .profile{
+    width:100%;
+    max-width:1080px;
+    display:grid;
+    grid-template-columns:minmax(390px,.9fr) minmax(460px,1.1fr);
+    align-items:stretch;
+    min-height:calc(100dvh - 144px);
+    padding-bottom:0;
+    border-radius:32px;
+    background:
+      linear-gradient(112deg,rgba(255,255,255,.16),rgba(255,255,255,.05) 42%,rgba(241,252,189,.18)),
+      var(--profileBackground);
+    box-shadow:
+      0 1px 0 rgba(255,255,255,.52) inset,
+      0 38px 90px rgba(30,35,16,.28),
+      0 12px 26px rgba(30,35,16,.14);
+  }
+  .topbar{
+    top:24px;
+    right:24px;
+  }
+  .hero-wrap{
+    grid-column:1;
+    grid-row:1;
+    align-self:stretch;
+    height:auto;
+    min-height:760px;
+    overflow:hidden;
+  }
+  .hero{
+    inset:0;
+    right:auto;
+    width:100%;
+    height:auto;
+    border-radius:32px 0 0 32px;
+    -webkit-mask:none;
+    mask:none;
+  }
+  .hero::after{
+    background:linear-gradient(90deg,transparent 48%,rgba(200,217,124,.90) 100%);
+  }
+  .hero img{
+    object-position:center;
+    transform-origin:center center;
+  }
+  .content{
+    grid-column:2;
+    grid-row:1;
+    align-self:stretch;
+    justify-content:flex-start;
+    min-width:0;
+    padding:86px 56px 54px;
+    background:linear-gradient(135deg,rgba(255,255,255,.22),rgba(241,252,189,.16));
+    border-left:1px solid rgba(255,255,255,.28);
+  }
+  .logo-wrap{
+    width:min(250px,78%);
+  }
+  .name-text{
+    font-size:clamp(30px,3vw,42px);
+  }
+  .bio{
+    max-width:380px;
+    margin-top:16px;
+    padding-inline:0;
+  }
+  .verified{margin-top:10px}
+  .panel{
+    width:100%;
+    max-width:480px;
+    margin-top:30px;
+    padding-inline:0;
+  }
+  .links{gap:13px}
+  .link{
+    border-radius:23px;
+    box-shadow:4px 5px 0 var(--button-style-shadow-color);
+  }
+  .chin{min-height:68px}
+  .socials{
+    max-width:420px;
+    margin-top:28px;
+    gap:18px;
+  }
+  .player{
+    width:100%;
+    max-width:480px;
+    margin:34px 0 0;
+  }
+  .bg-echo .echo-src{width:var(--desktop-card-w)}
+}
+
+@media (min-width:1280px){
+  .frame{padding-top:68px;padding-bottom:100px}
+  .profile{grid-template-columns:minmax(430px,.92fr) minmax(500px,1.08fr)}
+  .content{padding-inline:72px}
+  .hero-wrap{min-height:800px}
+}
+
 </style>
 
 <a href="#content" class="skip-link">Lewati ke konten</a>
@@ -1865,5 +1972,5 @@ build();
   document.body.classList.add('custom-cursor-enabled');
 })();
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3a37eb1e822da92',t:'MTc4OTI2NDE2MQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3a383a2bc92155a',t:'MTc4OTI2NDM2Mw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
