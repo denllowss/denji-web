@@ -426,6 +426,9 @@ img.img-fail{visibility:hidden}
 .player-actions .act:focus-visible{outline:2px solid var(--amp-key-focus);outline-offset:1px}
 .player audio{position:absolute;width:0;height:0;opacity:0;pointer-events:none}
 #playerAir svg{width:20px;height:16px}
+#playerLoopButton svg{width:20px;height:18px}
+#playerLoopButton.is-active{color:var(--amp-key);background:rgba(214,0,23,.10)}
+#playerLoopButton.is-active:hover{background:rgba(214,0,23,.16)}
 #playerMore svg{width:20px;height:4.6px}
 #playerVol svg{width:18px;height:18px}
 #playerVol .vw{transition:opacity .1s linear}
@@ -1092,6 +1095,7 @@ if (PL.aktif !== false && PL.mp3){
         '<button class="is-off" type="button" id="playerNext" aria-label="Berikutnya" aria-disabled="true" tabindex="-1">'+IC.next+'</button>' +
       '</div>' +
       '<div class="player-actions">' +
+        '<button class="act" type="button" id="playerLoopButton" aria-label="Ulangi lagu" aria-pressed="false" title="Ulangi lagu">'+IC.repeat+'</button>' +
         '<button class="act" type="button" id="playerAir" aria-label="AirPlay">'+IC.air+'</button>' +
         '<span class="vol" id="playerVolWrap">' +
           '<button class="act lv3" type="button" id="playerVol" aria-label="Volume">'+IC.speaker+'</button>' +
@@ -1099,7 +1103,6 @@ if (PL.aktif !== false && PL.mp3){
         '</span>' +
         '<button class="act" type="button" id="playerMore" aria-label="Lainnya" aria-haspopup="menu" aria-expanded="false">'+IC.more+'</button>' +
         '<div class="pm" id="playerMenu" role="menu">' +
-          '<button class="mi" type="button" id="playerLoop" role="menuitemcheckbox" aria-checked="false"><span class="mico">'+IC.repeat+'</span><span>Ulangi lagu</span></button>' +
           '<a class="mi" href="'+pSrc+'" target="_blank" rel="noopener" download role="menuitem"><span>Unduh audio</span></a>' +
         '</div>' +
       '</div>' +
@@ -1210,7 +1213,7 @@ window.addEventListener('orientationchange', setVH, {passive:true});
   var volR   = document.getElementById('playerVolRange');
   var moreB  = document.getElementById('playerMore');
   var menu   = document.getElementById('playerMenu');
-  var loopB  = document.getElementById('playerLoop');
+  var loopB  = document.getElementById('playerLoopButton');
 
   function tampil(m){ if (typeof showToast === 'function') showToast(m); }
   function fmt(s){
@@ -1301,8 +1304,7 @@ window.addEventListener('orientationchange', setVH, {passive:true});
   if (loopB) loopB.addEventListener('click', function(){
     audio.loop = !audio.loop;
     loopB.classList.toggle('is-active', audio.loop);
-    loopB.setAttribute('aria-checked', String(audio.loop));
-    closeMenu();
+    loopB.setAttribute('aria-pressed', String(audio.loop));
     tampil(audio.loop ? 'Mengulang lagu ini' : 'Ulangan dimatikan');
   });
 
@@ -1863,5 +1865,5 @@ build();
   document.body.classList.add('custom-cursor-enabled');
 })();
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3a376f269470d4c',t:'MTc4OTI2Mzg0NA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3a37eb1e822da92',t:'MTc4OTI2NDE2MQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
