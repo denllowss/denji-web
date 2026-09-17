@@ -23510,8 +23510,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (!targetHash) return;
 
                 setTimeout(() => {
-                    if (window.location.hash === targetHash) return;
-                    window.location.hash = targetHash;
+                    // Navigasi internal: URL tetap bersih (tanpa "#preset").
+                    if (typeof window.cfNavigate === 'function') {
+                        window.cfNavigate(targetHash);
+                    } else if (window.location.hash !== targetHash) {
+                        window.location.hash = targetHash;
+                    }
                 }, 120);
             });
         });
@@ -26389,7 +26393,15 @@ document.addEventListener('DOMContentLoaded', () => {
             closeResourceModal();
         }
 
-        const rawHash = (window.location.hash || '#home').replace('#', '').toLowerCase();
+        // Rute dari klik internal (dock, tombol di hero, papan arah) dititipkan
+        // lewat window.__cfPendingRoute supaya address bar tidak pernah berisi
+        // "#preset" / "#social" dan sejenisnya.
+        const pendingRoute = window.__cfPendingRoute
+            ? String(window.__cfPendingRoute).replace('#', '').toLowerCase()
+            : '';
+        window.__cfPendingRoute = null;
+
+        const rawHash = (pendingRoute || window.location.hash || '#home').replace('#', '').toLowerCase();
 
         let activeViewKey = 'home';
         window.pendingPresetIndex = null;
@@ -26423,6 +26435,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const keepHash = ['privacy', 'tos', 'terms', 'disclaimer', 'dmca'].includes(rawHash);
             const finalHash = keepHash ? `#${rawHash}` : (activeViewKey === 'home' ? '' : `#${activeViewKey}`);
             try { history.replaceState(null, '', `/${finalHash}`); } catch (e) {}
+        }
+
+        // URL selalu bersih: kalau masih ada sisa "#..." (link lama / deep-link),
+        // langsung dihapus dari address bar tanpa mengubah isi halaman.
+        if (window.location.hash) {
+            try { history.replaceState(null, '', window.location.pathname + window.location.search); } catch (e) {}
         }
 
         navItems.forEach(item => {
@@ -26518,6 +26536,25 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 150);
     });
     window.addEventListener('hashchange', navigateToRoute);
+
+    // Navigasi internal TANPA menulis hash ke URL. Dipakai dock, tombol
+    // "Contact Us" di hero, dan papan arah di tiang.
+    window.cfNavigate = function (route) {
+        window.__cfPendingRoute = String(route || '').replace('#', '').toLowerCase();
+        navigateToRoute();
+    };
+
+    // Semua tautan "#..." yang isinya halaman (bukan anchor biasa) dicegat,
+    // jadi tidak ada lagi URL berbentuk domain.com/#preset.
+    const CF_ROUTE_KEYS = ['home', 'preset', 'presets', 'social', 'contact', 'contact-us', 'contacts'];
+    document.addEventListener('click', (e) => {
+        const link = e.target.closest('a[href^="#"]');
+        if (!link || link.hasAttribute('data-keep-hash')) return;
+        const key = (link.getAttribute('href') || '').replace('#', '').toLowerCase();
+        if (CF_ROUTE_KEYS.indexOf(key) === -1) return;
+        e.preventDefault();
+        window.cfNavigate(key);
+    });
     if (typeof window.translateUI === 'function') {
         window.translateUI();
     }
@@ -26585,5 +26622,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 2500);
         })();
     </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3b318ece8c155c9',t:'MTc4OTQyNzc2NQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3cbac2f4dcbe78b',t:'MTc4OTY4NTQ1NQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3b318ece8c155c9',t:'MTc4OTQyNzc2NQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3cbb7286a0ba553',t:'MTc4OTY4NTkwNA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
