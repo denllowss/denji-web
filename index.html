@@ -871,6 +871,12 @@ body.preset-modal-open .floating-nav-bar {
     border-radius: var(--radius-full);
     z-index: 1;
     pointer-events: none;
+    /* Posisi + lebarnya dihitung JS tiap frame (gerak pegas & melar), jadi
+       jangan dikasih transition — biar tidak ada lag dobel. */
+    transition: none;
+    will-change: left, width;
+    transform: translateZ(0);
+    backface-visibility: hidden;
 }
 
 .floating-nav-item {
@@ -26323,19 +26329,54 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function updateNavIndicator() {
+    /* ------------------------------------------------------------------
+       Indikator dock (pil panjang):
+       • tepi kiri & tepi kanannya digerakkan pakai pegas (bukan lompat),
+         jadi perpindahannya mulus dan mendaratnya agak "mantul" dikit;
+       • sambil jalan, pilnya ditarik melar ke kanan-kiri (stretch) sebanding
+         kecepatannya, lalu mengempis lagi persis pas sampai tujuan —
+         efeknya kayak tetesan cairan yang ditarik.
+       ------------------------------------------------------------------ */
+    const NAV_SPRING_K = 190;      // kekakuan pegas (ω ≈ 13.8 rad/s)
+    const NAV_SPRING_C = 23;       // redaman (ζ ≈ 0.83 → halus, sedikit overshoot)
+    const NAV_STRETCH_MAX = 36;    // tambahan panjang maksimum saat melar (px)
+    const NAV_STRETCH_V = 460;     // kecepatan yang bikin melarnya mentok (px/detik)
+
+    const navInd = { left: null, right: null, vLeft: 0, vRight: 0 };
+    const navIndReduceMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+
+    function navIndicatorTarget() {
         const navBar = document.getElementById('floating-nav');
         const indicator = document.getElementById('floating-nav-indicator');
         const activeItem = navBar ? navBar.querySelector('.floating-nav-item.active') : null;
-        if (!navBar || !indicator || !activeItem) return;
+        if (!navBar || !indicator || !activeItem) return null;
 
         const navRect = navBar.getBoundingClientRect();
         const itemRect = activeItem.getBoundingClientRect();
-        const leftPos = itemRect.left - navRect.left + (navBar.scrollLeft || 0);
-        const width = itemRect.width;
+        const left = itemRect.left - navRect.left + (navBar.scrollLeft || 0);
+        return { indicator, left, right: left + itemRect.width };
+    }
 
-        indicator.style.left = `${leftPos}px`;
-        indicator.style.width = `${width}px`;
+    function paintNavIndicator(left, right, stretch) {
+        const t = navIndicatorTarget();
+        if (!t) return;
+        const extra = stretch || 0;
+        // melar ke dua arah: sisi kiri geser ke kiri, sisi kanan geser ke kanan
+        t.indicator.style.left = (left - extra / 2).toFixed(2) + 'px';
+        t.indicator.style.width = Math.max(10, (right - left) + extra).toFixed(2) + 'px';
+    }
+
+    // Langsung pas ke posisi item aktif (dipakai saat muat halaman, resize,
+    // dan waktu dock-nya digeser/di-swipe manual).
+    function updateNavIndicator() {
+        if (navIndicatorRaf) { cancelAnimationFrame(navIndicatorRaf); navIndicatorRaf = null; }
+        const t = navIndicatorTarget();
+        if (!t) return;
+        navInd.left = t.left;
+        navInd.right = t.right;
+        navInd.vLeft = 0;
+        navInd.vRight = 0;
+        paintNavIndicator(t.left, t.right, 0);
     }
 
     let navScrolledOnce = false;
@@ -26358,19 +26399,69 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let navIndicatorRaf = null;
 
-    function trackNavIndicator(duration = 400) {
-        if (navIndicatorRaf) cancelAnimationFrame(navIndicatorRaf);
-        const startTime = performance.now();
+    function trackNavIndicator(duration = 620) {
+        if (navIndicatorRaf) return;          // animasi sebelumnya masih jalan
+        const start = navIndicatorTarget();
+        if (!start) return;
 
-        function step(now) {
-            updateNavIndicator();
-            if (now - startTime < duration) {
-                navIndicatorRaf = requestAnimationFrame(step);
-            } else {
+        if (navInd.left === null || navInd.right === null || navIndReduceMotion) {
+            navInd.left = start.left;
+            navInd.right = start.right;
+            if (navIndReduceMotion) {
+                // tanpa animasi: pas ke posisi langsung, tapi ukur ulang sebentar
+                // (label item baru nge-geser di frame berikutnya)
                 updateNavIndicator();
-                navIndicatorRaf = null;
+                [0, 60, 160, 320].forEach((d) => setTimeout(updateNavIndicator, d));
+                return;
             }
         }
+
+        const startedAt = performance.now();
+        let last = startedAt;
+
+        const step = (now) => {
+            const t = navIndicatorTarget();
+            if (!t) { navIndicatorRaf = null; return; }
+
+            const dt = Math.min(0.032, Math.max(0.0015, (now - last) / 1000));
+            last = now;
+
+            // pegas per tepi: kiri & kanan dihitung sendiri-sendiri
+            const spring = (x, v, target) => {
+                const a = -NAV_SPRING_K * (x - target) - NAV_SPRING_C * v;
+                const nv = v + a * dt;
+                return [x + nv * dt, nv];
+            };
+
+            let [xl, vl] = spring(navInd.left, navInd.vLeft, t.left);
+            let [xr, vr] = spring(navInd.right, navInd.vRight, t.right);
+
+            // melar sebanding kecepatan (memanjang ke kanan-kiri), lalu mengempis
+            const speed = (Math.abs(vl) + Math.abs(vr)) / 2;
+            const stretch = Math.min(NAV_STRETCH_MAX, NAV_STRETCH_MAX * (speed / NAV_STRETCH_V));
+
+            navInd.left = xl;
+            navInd.right = xr;
+            navInd.vLeft = vl;
+            navInd.vRight = vr;
+            paintNavIndicator(xl, xr, stretch);
+
+            const settled = Math.abs(xl - t.left) < 0.35 && Math.abs(xr - t.right) < 0.35 &&
+                            Math.abs(vl) < 8 && Math.abs(vr) < 8;
+
+            if (settled || now - startedAt > Math.max(duration * 2, 1200)) {
+                navInd.left = t.left;
+                navInd.right = t.right;
+                navInd.vLeft = 0;
+                navInd.vRight = 0;
+                paintNavIndicator(t.left, t.right, 0);
+                navIndicatorRaf = null;
+                return;
+            }
+
+            navIndicatorRaf = requestAnimationFrame(step);
+        };
+
         navIndicatorRaf = requestAnimationFrame(step);
     }
 
@@ -26622,6 +26713,5 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 2500);
         })();
     </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3b318ece8c155c9',t:'MTc4OTQyNzc2NQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3cbb7286a0ba553',t:'MTc4OTY4NTkwNA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3b318ece8c155c9',t:'MTc4OTQyNzc2NQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3cbcae9be19960c',t:'MTc4OTY4NjcxMw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
