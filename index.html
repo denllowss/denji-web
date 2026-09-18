@@ -23,267 +23,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>denji</title>
-    <meta name="description" content="denji is the ultimate resource hub for video editors and creators. Access a curated collection of premium presets, essential editing software, and more!">
-    <style>
-/* https://fonts.googleapis.com/css2?family=Unbounded:wght@300; (inlined) */
-/* thai */
-
-/* vietnamese */
-
-/* latin-ext */
-
-/* latin */
-
-/* thai */
-
-/* vietnamese */
-
-/* latin-ext */
-
-/* latin */
-
-/* thai */
-
-/* vietnamese */
-
-/* latin-ext */
-
-/* latin */
-
-/* thai */
-
-/* vietnamese */
-
-/* latin-ext */
-
-/* latin */
-
-/* cyrillic-ext */
-
-/* cyrillic */
-
-/* greek */
-
-/* vietnamese */
-
-/* latin-ext */
-
-/* latin */
-
-/* cyrillic-ext */
-
-/* cyrillic */
-
-/* greek */
-
-/* vietnamese */
-
-/* latin-ext */
-
-/* latin */
-
-/* cyrillic-ext */
-
-/* cyrillic */
-
-/* greek */
-
-/* vietnamese */
-
-/* latin-ext */
-
-/* latin */
-
-/* javanese */
-
-/* latin-ext */
-
-/* latin */
-
-/* javanese */
-
-/* latin-ext */
-
-/* latin */
-
-/* javanese */
-
-/* latin-ext */
-
-/* latin */
-
-/* cyrillic-ext */
-
-/* vietnamese */
-
-/* latin-ext */
-
-/* latin */
-
-/* cyrillic-ext */
-
-/* vietnamese */
-
-/* latin-ext */
-
-/* latin */
-
-/* cyrillic-ext */
-
-/* vietnamese */
-
-/* latin-ext */
-
-/* latin */
-
-/* cyrillic-ext */
-
-/* vietnamese */
-
-/* latin-ext */
-
-/* latin */
-
-/* cyrillic-ext */
-
-/* cyrillic */
-
-/* vietnamese */
-
-/* latin-ext */
-
-/* latin */
-
-/* cyrillic-ext */
-
-/* cyrillic */
-
-/* vietnamese */
-
-/* latin-ext */
-
-/* latin */
-
-/* cyrillic-ext */
-
-/* cyrillic */
-
-/* vietnamese */
-
-/* latin-ext */
-
-/* latin */
-
-/* cyrillic-ext */
-
-/* cyrillic */
-
-/* vietnamese */
-
-/* latin-ext */
-
-/* latin */
-
-/* cyrillic-ext */
-
-/* cyrillic */
-
-/* vietnamese */
-
-/* latin-ext */
-
-/* latin */
-
-/* cyrillic-ext */
-
-/* cyrillic */
-
-/* vietnamese */
-
-/* latin-ext */
-
-/* latin */
-
-/* cyrillic-ext */
-
-/* cyrillic */
-
-/* vietnamese */
-
-/* latin-ext */
-
-/* latin */
-
-/* ==== font-face (inlined + deduped) ==== */
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-</style>
+    
+    <!-- Font: diambil dari CDN (tidak ditanam di file) -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=JetBrains+Mono:wght@400..700&family=Noto+Sans+Javanese:wght@400..700&family=Plus+Jakarta+Sans:wght@400..700&family=Unbounded:wght@300..900&family=Material+Symbols+Rounded&display=swap">
+<meta name="description" content="denji is the ultimate resource hub for video editors and creators. Access a curated collection of premium presets, essential editing software, and more!">
     <style>
 /* https://fonts.googleapis.com/css2?family=Material+Symbols+Ro (inlined) */
 /* fallback */
@@ -1732,6 +1478,12 @@ body:not([data-view="home"]) .signpost-overlay {
     outline-offset: -4px;
 }
 
+.lt-icon .bi {
+    font-size: 21px;
+    line-height: 1;
+    display: block;
+}
+
 .lt-icon {
     flex: 0 0 auto;
     width: 44px;
@@ -2038,21 +1790,27 @@ body:not([data-view="home"]) .signpost-overlay {
 .blog-dot { opacity: 0.5; }
 
 /* ---------- badan post: bisa diringkas ----------
-   Tingginya dianimasikan lewat grid 1fr -> 0fr, padding ikut termuat ke 0,
-   dan isi memudar lebih cepat supaya tidak ada potongan yang kelihatan.
+   Tingginya dianimasikan dalam ukuran px oleh JS. Jarak yang dianimasikan
+   dibatasi +-1 layar saja (lihat initBloggerPosts): sisa tinggi yang ada di
+   luar layar langsung "dipasang" tanpa animasi, jadi tidak ada loncatan yang
+   kelihatan dan gerakannya tetap halus walau postnya panjang.
+   Padding isi TIDAK ikut dianimasikan supaya isinya tidak terlihat terperas;
+   yang bergerak cuma tepi bawah kartu + isi memudar tipis.
    Setelah tertutup penuh, isinya dilepas dari keyboard & screen reader
    (inert + aria-hidden, diatur JS). */
 .blog-body {
-    display: grid;
-    /* minmax(0,1fr) penting: tanpa ini baris tombol sub-navigasi yang panjang
-       ikut melebarkan kolom grid, jadi kartu Blogger jebol ke kanan di HP. */
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: 1fr;
-    transition: grid-template-rows 0.42s cubic-bezier(0.33, 0, 0.2, 1);
+    height: 0;
+    overflow: hidden;
+    overflow: clip;
+    /* biar browser tidak "menambatkan" posisi scroll ke isi yang lagi dilipat */
+    overflow-anchor: none;
+    /* lukisan dibatasi ke kotak ini saja -> repaint lebih ringan & rata */
+    contain: layout paint;
+    transition: height var(--blog-dur, 420ms) var(--blog-ease, cubic-bezier(0.4, 0, 0.2, 1));
 }
 
-.blog-post.is-collapsed .blog-body {
-    grid-template-rows: 0fr;
+.blog-post:not(.is-collapsed) .blog-body {
+    height: auto;
 }
 
 .blog-body-inner {
@@ -2065,17 +1823,17 @@ body:not([data-view="home"]) .signpost-overlay {
     flex-direction: column;
     gap: 10px;
     opacity: 1;
-    transition: padding 0.42s cubic-bezier(0.33, 0, 0.2, 1),
-                opacity 0.3s ease 0.08s;
+    transform: none;
+    transition: opacity 260ms ease 40ms,
+                transform 460ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .blog-post.is-collapsed .blog-body-inner {
-    padding-top: 0;
-    padding-bottom: 0;
     opacity: 0;
     pointer-events: none;
-    transition: padding 0.42s cubic-bezier(0.33, 0, 0.2, 1),
-                opacity 0.18s ease;
+    transform: translateY(-4px);
+    transition: opacity 200ms ease 140ms,
+                transform 320ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* ---------- bagian (tile) ---------- */
@@ -3302,7 +3060,7 @@ body:not([data-view="home"]) .signpost-overlay {
 
 .blog-toggle-icon {
     font-size: 1.05rem;
-    transition: transform 0.36s var(--ease-spring-soft);
+    transition: transform 460ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .blog-post.is-collapsed .blog-toggle-icon {
@@ -8732,11 +8490,6 @@ body.preset-popup-active .preset-modal-card.expanded {
     }
 })();
 </script>
-    <!-- Font: diambil dari CDN (tidak ditanam di file) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=JetBrains+Mono:wght@400..700&family=Noto+Sans+Javanese:wght@400..700&family=Plus+Jakarta+Sans:wght@400..700&family=Unbounded:wght@300..900&family=Material+Symbols+Rounded&display=swap">
 </head>
 <body data-view="home">
     <nav class="floating-nav-bar dock-intro" id="floating-nav">
@@ -8873,7 +8626,7 @@ body.preset-popup-active .preset-modal-card.expanded {
 
                                                         <div class="lt-item lt-tone-a">
                                 <a class="lt-head" href="https://wa.me/18674678687" target="_blank" rel="noopener noreferrer">
-                                    <span class="lt-icon" aria-hidden="true"><span class="material-symbols-rounded">auto_fix_high</span></span>
+                                    <span class="lt-icon" aria-hidden="true"><i class="bi bi-whatsapp"></i></span>
                                     <span class="lt-text">
                                         <span class="lt-title">Free Jasa Edit (pakai preset AM)</span>
                                         <span class="lt-meta">
@@ -23798,7 +23551,24 @@ document.addEventListener('DOMContentLoaded', () => {
             return fallback;
         };
 
-        const DURASI_LIPAT = 430;   // sedikit lebih lama dari animasi CSS (420ms)
+        /* --- Pengaturan animasi lipat ---------------------------------------
+           Jarak yang dianimasikan dibatasi +-1 layar (BATAS_LAYAR). Sisa
+           tinggi yang ada di luar layar langsung dipasang tanpa animasi,
+           jadi tidak ada gerakan ngebut yang bikin pusing.
+           Kecepatan KECEPATAN px/ms dipakai untuk menghitung durasi, lalu
+           dijepit di antara DUR_MIN dan DUR_MAX.                            */
+        const KECEPATAN   = 2.6;    // px per milidetik (± 2.600 px/detik)
+        const DUR_MIN     = 300;    // ms - animasi paling cepat
+        const DUR_MAX     = 560;    // ms - animasi paling lambat
+        const BATAS_LAYAR = 1.15;   // berapa kali tinggi layar yang dianimasikan
+        const EASE_LIPAT  = 'cubic-bezier(0.4, 0, 0.2, 1)';   // mulai & berhenti halus
+        const durasiUntuk = (jarak) => Math.round(Math.min(DUR_MAX, Math.max(DUR_MIN, jarak / KECEPATAN)));
+        const mauHematGerak = () => !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+        // Tinggi isi apa adanya (wadahnya boleh sedang beranimasi / tersembunyi).
+        const tinggiIsi = (el) => {
+            const isi = el.firstElementChild;
+            return Math.max(el.scrollHeight, isi ? Math.round(isi.getBoundingClientRect().height) : 0);
+        };
 
         posts.forEach(post => {
             const btn = post.querySelector('.blog-toggle');
@@ -23807,9 +23577,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const label = btn.querySelector('.blog-toggle-label');
             let hideTimer = 0;
+            let tinggiTimer = 0;
 
             // Isi yang terlipat: benar-benar dilepas (tidak bisa di-tab/diklik/dibaca)
-            const setHidden = (hidden, langsung) => {
+            const setHidden = (hidden, langsung, jeda) => {
                 if (hideTimer) { clearTimeout(hideTimer); hideTimer = 0; }
                 const sembunyikan = () => {
                     body.setAttribute('aria-hidden', 'true');
@@ -23821,16 +23592,65 @@ document.addEventListener('DOMContentLoaded', () => {
                         hideTimer = 0;
                         if (!post.classList.contains('is-collapsed')) return;
                         sembunyikan();
-                    }, DURASI_LIPAT);
+                    }, jeda || 0);
                 } else {
                     body.removeAttribute('aria-hidden');
                     if ('inert' in body) body.inert = false;
                 }
             };
 
+            /* Tinggi sekarang dikunci jadi px dulu (transition dimatikan), supaya
+               saat kelasnya berubah kartunya tidak "kedip" tinggi penuh. */
+            const kunciTinggi = () => {
+                if (tinggiTimer) { clearTimeout(tinggiTimer); tinggiTimer = 0; }
+                body.style.transition = 'none';
+                body.style.height = Math.round(body.getBoundingClientRect().height) + 'px';
+                void body.offsetHeight;                        // paksa hitung ulang
+            };
+
+            /* Baru setelah itu tinggi dianimasikan ke `tujuan` px. Begitu selesai,
+               gaya inline dibersihkan supaya kembali ke aturan CSS (auto saat
+               terbuka, 0 saat terlipat) — perubahan sisa ini ada di luar layar. */
+            const jalanKe = (tujuan, durasi, selesai) => {
+                body.style.transition = 'height ' + durasi + 'ms ' + EASE_LIPAT;
+                body.style.height = Math.round(tujuan) + 'px';
+                tinggiTimer = setTimeout(() => {
+                    tinggiTimer = 0;
+                    body.style.transition = 'none';
+                    body.style.height = '';                    // balik ke aturan CSS
+                    void body.offsetHeight;
+                    body.style.transition = '';
+                    if (selesai) selesai();
+                }, durasi + 40);
+            };
             const setState = (collapsed, langsung) => {
+                // 1) Hitung dulu tinggi & jarak animasinya sebelum kelas diubah.
+                const tinggi = tinggiIsi(body);
+                const sekarang = body.getBoundingClientRect().height;
+                const jarakPenuh = collapsed ? (sekarang || tinggi) : tinggi;
+                const jarakAnimasi = Math.min(jarakPenuh,
+                    Math.max(320, Math.round(window.innerHeight * BATAS_LAYAR)));
+                const durasi = langsung || mauHematGerak() ? 0 : durasiUntuk(jarakAnimasi);
+
+                // 2) Kunci tinggi sekarang SEBELUM kelasnya diubah, biar tidak
+                //    ada kedipan tinggi penuh satu frame.
+                const animasi = !(langsung || durasi === 0);
+                if (animasi) {
+                    kunciTinggi();
+                    /* Saat MENUTUP, bagian yang sudah ada di luar layar langsung
+                       dipangkas (tanpa animasi) — yang dianimasikan cuma sisa +-1
+                       layar yang benar-benar kelihatan. Jadi gerakannya tetap
+                       pelan & rapi walau postnya panjang. */
+                    if (collapsed && sekarang > jarakAnimasi + 1) {
+                        body.style.height = Math.round(jarakAnimasi) + 'px';
+                        void body.offsetHeight;
+                    }
+                }
+
+                // 3) Kelas + label + aria.
                 post.classList.toggle('is-collapsed', collapsed);
                 btn.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+                body.style.setProperty('--blog-dur', (durasi || 1) + 'ms');
 
                 const key = collapsed ? 'blog_expand' : 'blog_minimize';
                 const text = t(key, collapsed ? 'Expand' : 'Minimize');
@@ -23839,7 +23659,27 @@ document.addEventListener('DOMContentLoaded', () => {
                     label.textContent = text;
                 }
                 btn.setAttribute('aria-label', text + ' — ' + (post.querySelector('.blog-title') || {}).textContent);
-                setHidden(collapsed, langsung);
+
+                // 4) Jalankan.
+                if (!animasi) {
+                    if (tinggiTimer) { clearTimeout(tinggiTimer); tinggiTimer = 0; }
+                    body.style.transition = 'none';
+                    body.style.height = '';
+                    void body.offsetHeight;
+                    body.style.transition = '';
+                    setHidden(collapsed, true);
+                    return;
+                }
+                if (collapsed) {
+                    // isi masih perlu dibaca sampai animasinya selesai
+                    setHidden(false, true);
+                    jalanKe(0, durasi, () => {
+                        if (post.classList.contains('is-collapsed')) setHidden(true, true);
+                    });
+                } else {
+                    setHidden(false, true);
+                    jalanKe(jarakAnimasi, durasi, null);
+                }
             };
 
             // Keadaan awal: kalau post memang terlipat, isinya langsung dilepas
@@ -23900,7 +23740,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Kalau fokus sedang ada di dalam isi yang mau dilipat, pindahkan ke tombolnya
                 // supaya fokusnya tidak "hilang" di elemen yang tersembunyi.
                 if (collapsed && body.contains(document.activeElement)) btn.focus();
-                setState(collapsed);
+                setState(collapsed, false);
             });
         });
     };
@@ -26474,5 +26314,5 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 2500);
         })();
     </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3b318ece8c155c9',t:'MTc4OTQyNzc2NQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3cbf8c78f7a0557',t:'MTc4OTY4ODU5Mg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3b318ece8c155c9',t:'MTc4OTQyNzc2NQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3cd3fa0c86d0d4c',t:'MTc4OTcwMTk4MA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
