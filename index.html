@@ -28,6 +28,237 @@
 <meta name="twitter:image:alt" content="denji - harvey, nobody know what i see">
 <meta name="theme-color" content="#c8d97c">
 <meta name="color-scheme" content="light">
+<style id="anti-bleed-boot">
+  /* Cat pertama: cegah kanvas putih sebelum stylesheet utama kebaca (overscroll Android / tepi desktop). */
+  html,body{background:#c8d97c;background-color:#c8d97c;margin:0}
+
+/* ─────────────────────────────────────────────────────────────
+   Anti-bleed: warna tidak boleh keluar dari areanya.
+   Android: mask radial sering gagal / berpita, backdrop-filter
+   mengabaikan radius, overscroll menampakkan putih.
+   Desktop: fade foto tidak mentok, gradient kuning tombol dan
+   klon blur menumpahkan warna di luar kartu.
+   ───────────────────────────────────────────────────────────── */
+:root{
+  --latar-rgb:200, 217, 124;
+  --page-bg:var(--profileBackground);
+  --page-image:none;
+  --card-r:0px;
+  --htl:0px; --htr:0px; --hbr:0px; --hbl:0px;
+}
+html,body{
+  background-color:var(--page-bg);
+  background-image:var(--page-image);
+  background-repeat:no-repeat;
+  background-attachment:scroll;
+  background-size:100% 100vh;
+  background-size:100% 100dvh;
+  min-height:100%;
+  min-height:100dvh;
+  min-height:100lvh;
+  overflow-x:hidden;
+  overflow-x:clip;
+  overscroll-behavior:none;
+}
+html{box-shadow:0 0 0 160px var(--page-bg)}
+body{position:relative;z-index:1;max-width:100%}
+.frame{position:relative;z-index:1;max-width:100%}
+.profile{
+  overflow:hidden;
+  isolation:isolate;
+  border-radius:var(--card-r);
+  background-color:var(--profileBackground);
+  max-width:100%;
+}
+.hero-wrap{
+  overflow:hidden;
+  max-width:100%;
+  background:var(--profileBackground);
+  border-radius:var(--htl) var(--htr) var(--hbr) var(--hbl);
+}
+.hero{
+  overflow:hidden;
+  isolation:isolate;
+  background:var(--profileBackground);
+  -webkit-mask:none;
+  mask:none;
+  border-radius:var(--htl) var(--htr) var(--hbr) var(--hbl);
+  -webkit-clip-path:inset(0 round var(--htl) var(--htr) var(--hbr) var(--hbl));
+  clip-path:inset(0 round var(--htl) var(--htr) var(--hbr) var(--hbl));
+}
+.hero img{width:100%;height:100%;object-fit:cover;transform-origin:center center}
+/* Fade memakai RGB yang sama dengan latar, dan mentok opaque.
+   `transparent` dihindari karena terinterpolasi lewat hitam. */
+.hero::after{
+  background:linear-gradient(to bottom,
+    rgba(var(--latar-rgb),0) 52%,
+    rgba(var(--latar-rgb),1) 86%,
+    rgba(var(--latar-rgb),1) 100%);
+  pointer-events:none;
+}
+.profile::before,.hero::before{
+  content:none!important;
+  display:none!important;
+  animation:none!important;
+  background:none!important;
+  mix-blend-mode:normal!important;
+}
+.content{background-color:var(--profileBackground);position:relative;z-index:1}
+
+.icon-btn{
+  overflow:hidden;
+  background:var(--button-style-background);
+  border:0;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 6px 16px rgba(16,19,10,.12);
+  -webkit-backdrop-filter:none;
+  backdrop-filter:none;
+}
+.icon-btn:hover{background:var(--button-style-background-hover);border-color:transparent}
+.player{overflow:visible;isolation:isolate;background:transparent}
+.player::before,
+.vol-pop,
+.pm{
+  -webkit-backdrop-filter:none;
+  backdrop-filter:none;
+}
+.player::before{
+  background:#f4f4f2;
+  border-radius:inherit;
+  overflow:hidden;
+  -webkit-clip-path:inset(0 round 1000px);
+  clip-path:inset(0 round 1000px);
+}
+.vol-pop{
+  background:#f4f4f4;
+  overflow:hidden;
+  -webkit-clip-path:inset(0 round 1000px);
+  clip-path:inset(0 round 1000px);
+}
+.pm{
+  background:#f4f4f4;
+  overflow:hidden;
+  -webkit-clip-path:inset(0 round 14px);
+  clip-path:inset(0 round 14px);
+}
+.bg-echo{display:none!important}
+
+@media (max-width:639px){
+  .hero-wrap{
+    overflow:hidden;
+    height:min(100vw,72vh);
+    margin-bottom:-2px;
+  }
+  .hero{
+    top:0;right:0;bottom:0;left:0;
+    width:100%;
+    height:100%;
+    max-width:100%;
+  }
+  .player::before{
+    -webkit-clip-path:inset(0 round 24px);
+    clip-path:inset(0 round 24px);
+  }
+}
+
+@media (min-width:640px){
+  :root{
+    --page-bg:var(--frame-color);
+    --page-image:radial-gradient(ellipse 72% 58% at 50% 38%, var(--profileBackground) 0%, var(--frame-color) 72%);
+    --card-r:28px;
+    --htl:28px; --htr:28px; --hbr:0px; --hbl:0px;
+  }
+  html,body{
+    background-color:var(--page-bg);
+    background-image:var(--page-image);
+    background-attachment:scroll;
+  }
+  body::before,body::after{
+    content:none!important;
+    display:none!important;
+    background:none!important;
+    box-shadow:none!important;
+  }
+  .profile{
+    border:0;
+    background:var(--profileBackground);
+    background-image:none;
+    border-radius:var(--card-r);
+  }
+  .hero-wrap{margin-bottom:-2px;overflow:hidden}
+  .hero::after{
+    background:linear-gradient(to bottom,
+      rgba(var(--latar-rgb),0) 56%,
+      rgba(var(--latar-rgb),1) 90%,
+      rgba(var(--latar-rgb),1) 100%);
+  }
+  .content{background-color:var(--profileBackground);border-left:0}
+}
+
+@media (min-width:980px) and (pointer:fine){
+  :root{
+    --card-r:32px;
+    --htl:32px; --htr:0px; --hbr:0px; --hbl:32px;
+  }
+  .profile{
+    border-radius:var(--card-r);
+    background:var(--profileBackground);
+    background-image:none;
+    border:0;
+  }
+  .hero-wrap{
+    overflow:hidden;
+    margin-bottom:0;
+    border-radius:32px 0 0 32px;
+  }
+  .hero{
+    -webkit-mask:none;
+    mask:none;
+  }
+  .hero::after{
+    background:linear-gradient(90deg,
+      rgba(var(--latar-rgb),0) 42%,
+      rgba(var(--latar-rgb),1) 88%,
+      rgba(var(--latar-rgb),1) 100%);
+  }
+  .content{
+    background-color:var(--profileBackground);
+    background-image:none;
+    border-left:0;
+  }
+}
+
+@media (min-width:980px) and (pointer:coarse){
+  :root{--htl:var(--card-r);--htr:var(--card-r);--hbr:0px;--hbl:0px}
+  .hero-wrap{margin-bottom:-2px;overflow:hidden;border-radius:var(--card-r) var(--card-r) 0 0}
+  .hero::after{
+    background:linear-gradient(to bottom,
+      rgba(var(--latar-rgb),0) 56%,
+      rgba(var(--latar-rgb),1) 92%,
+      rgba(var(--latar-rgb),1) 100%);
+  }
+  .content{background-color:var(--profileBackground);border-left:0}
+}
+
+@media (orientation:landscape) and (max-height:520px) and (pointer:coarse){
+  :root{
+    --page-bg:var(--profileBackground);
+    --page-image:none;
+    --card-r:0px;
+    --htl:0px; --htr:0px; --hbr:0px; --hbl:0px;
+  }
+  html,body{background:var(--profileBackground);background-image:none}
+  .frame{padding:0}
+  .profile{min-height:100dvh;border-radius:0;border:0;box-shadow:none}
+  .hero-wrap{overflow:hidden;height:min(52vh,280px);margin-bottom:-2px;border-radius:0}
+  .hero{top:0;right:0;bottom:0;left:0;width:100%;height:100%;border-radius:0}
+  .content{background-color:var(--profileBackground)}
+}
+
+@media (hover:none) and (pointer:coarse){
+  .icon-btn:hover{background:var(--button-style-background);border-color:transparent}
+}
+
+</style>
 
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1330,8 +1561,25 @@ function img(v){
 }
 
 var rs = document.documentElement.style;
-if (W.latar){ rs.setProperty('--profileBackground', W.latar);
-  var mt = document.querySelector('meta[name=theme-color]'); if (mt) mt.setAttribute('content', W.latar); }
+if (W.latar){ rs.setProperty('--profileBackground', W.latar); }
+function hexToRgbList(hex, fallback){
+  var h = String(hex || '').trim().replace('#','');
+  if (h.length === 3) h = h[0]+h[0]+h[1]+h[1]+h[2]+h[2];
+  if (!/^[0-9a-fA-F]{6}$/.test(h)) return fallback;
+  return parseInt(h.slice(0,2),16) + ', ' + parseInt(h.slice(2,4),16) + ', ' + parseInt(h.slice(4,6),16);
+}
+var latarHex = W.latar || '#c8d97c';
+rs.setProperty('--latar-rgb', hexToRgbList(latarHex, '200, 217, 124'));
+function syncChromeColor(){
+  var mt = document.querySelector('meta[name=theme-color]');
+  if (!mt) return;
+  var wide = window.matchMedia && window.matchMedia('(min-width:640px)').matches;
+  var phoneLand = window.matchMedia && window.matchMedia('(orientation:landscape) and (max-height:520px) and (pointer:coarse)').matches;
+  var frame = (getComputedStyle(document.documentElement).getPropertyValue('--frame-color') || '').trim() || '#b0bf6d';
+  mt.setAttribute('content', (wide && !phoneLand) ? frame : latarHex);
+}
+window.addEventListener('resize', syncChromeColor, {passive:true});
+window.addEventListener('orientationchange', syncChromeColor, {passive:true});
 if (W.tombol)      rs.setProperty('--button-style-background', W.tombol);
 if (W.garisTombol){ rs.setProperty('--button-style-border-color', W.garisTombol);
                     rs.setProperty('--button-style-shadow-color', W.garisTombol); }
@@ -1348,6 +1596,7 @@ function mixHex(a, b, t){
 }
 rs.setProperty('--button-style-background-hover', mixHex(W.tombol  || '#f1fcbd', '#000000', .07));
 rs.setProperty('--frame-color',                  mixHex(W.latar   || '#c8d97c', '#000000', .12));
+syncChromeColor();
 
 var judul = String((P.judulHalaman && String(P.judulHalaman).trim()) || (P.namaTeks && String(P.namaTeks).trim()) || 'Denji Web');
 document.title = judul;
@@ -2199,6 +2448,9 @@ var lq = window.matchMedia ? window.matchMedia('(orientation:landscape) and (max
 
 var LB = (typeof LATAR !== 'undefined' && LATAR) ? LATAR : {};
 if (LB.aktif === false) return;
+/* Jangan kloning halaman ke latar. Blur klon menumpahkan warna foto dan tombol
+   ke luar kartu, dan tepinya menyisakan pita warna di Android tablet / desktop. */
+return;
 var targetBlur = Math.min(150, Math.max(10, parseFloat(LB.blur) || 90));
 
 var app = document.getElementById('app');
@@ -2298,5 +2550,5 @@ build();
   document.body.classList.add('custom-cursor-enabled');
 })();
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3a39a4a88dc5576',t:'MTc4OTI2NTI5MQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3a39a4a88dc5576',t:'MTc4OTI2NTI5MQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3fcc1494e5a5576',t:'MTc5MDIwMDEyMQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
